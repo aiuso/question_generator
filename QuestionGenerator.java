@@ -1,12 +1,15 @@
 import javax.swing.*;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class QuestionGenerator {
 
-    public static void stockDilutions() {
 
-        // Contants for Random Value Ranges
+    public static void stockDilutionQuestion() {
+        Scanner scan = new Scanner(System.in);
+
+        // Constants for Random Value Ranges
         final int VONE_LOWEST_VALUE = 10;
         final int VONE_HIGHEST_VALUE = 500;
         final int CONE_LOWEST_VALUE = 25;
@@ -16,56 +19,114 @@ public class QuestionGenerator {
         final int VTWO_LOWEST_VALUE = 1000;
         final int VTWO_HIGHEST_VALUE = 10000;
 
+
         int cOne, vOne, cTwo, vTwo;
         int questionType = numGenerator(1, 1);
-        String question = new String();
-
-        DecimalFormat decimalFormat = new DecimalFormat("#.#");
+        String question;
+        String questionWater;
+        int userResponse;
+        int userResponseWater;
+        int water;
+        float answerBeforeRound;
+        int answer = 0;
 
 
         switch (questionType) {
-            // Solve for vOne
-            case 1:
 
+            // Solve for vOn
+            case 1:
                 cOne = numGenerator(CONE_LOWEST_VALUE, CONE_HIGHEST_VALUE);
                 cTwo = numGenerator(CTWO_LOWEST_VALUE, CTWO_HIGHEST_VALUE);
                 vTwo = numGenerator(VTWO_LOWEST_VALUE, VTWO_HIGHEST_VALUE);
                 //double vOne = (cTwo * vTwo) / cOne;
                 //vOne = Math.round(vOne
                 question = String.format("You are trying to make %smL of a %sx solution " +
-                                "from a %sx concentrated stock of TAE. \nHow many uL of %sx TAE do you need to add " +
-                                "to how much water, to make %smL of %sx TAE.",
-                        vTwo, cTwo, cOne, cOne, vTwo, cTwo);
+                        "from a %sx concentrated stock of TAE. \nWe'll need to determine " +
+                        "how much stock solution to add to a particular volume of water to make this solution. " +
+                        "\nFirst, how many mL of %sx TAE will we need? " +
+                        "\nRound your answer to the nearest integer",
+                        vTwo, cTwo, cOne, cOne);
                 System.out.println(question);
-                //System.out.println(vOne);
+                userResponse = validateInput();
+                answerBeforeRound = (float) (cTwo * vTwo) / cOne; //Prevent loss of precision due to Int Division
+                answer = Math.round(answerBeforeRound);
+                checkAnswer(userResponse, answer, questionType);
+
+                questionWater = String.format("\nNow, how much water will we need to mix with %smL of %sx TAE?" +
+                        "\nRound your answer to the nearest integer.",
+                        answer, cOne);
+                System.out.println(questionWater);
+                userResponseWater = validateInput();
+                water = vTwo - answer;
+                checkAnswer(userResponseWater, water, questionType);
                 break;
+
             // Solve for cOne
             case 2:
                 //int vOne, cTwo, vTwo;
                 vOne = numGenerator(VONE_LOWEST_VALUE, VONE_HIGHEST_VALUE);
                 cTwo = numGenerator(CTWO_LOWEST_VALUE, CTWO_HIGHEST_VALUE);
                 vTwo = numGenerator(VTWO_LOWEST_VALUE, VTWO_HIGHEST_VALUE);
-                question = String.format("The label on your stock TAE solution has been lost! " +
-                                "You know that you just made s%mL of s%x TAE solution. You also know " +
-                                "that you added s%uL of the stock in making your solution. Calulcate the concentration " +
-                                "of the stock solution so you can relabel it with the appropraite concentration.",
+                question = String.format("The label on your stock TAE solution has been lost! \n" +
+                        "You know that you just made %smL of %sx TAE solution. You also know " +
+                        "that you added %smL of the stock in making your solution. " +
+                        "\nCalculate the concentration of the stock " +
+                        "solution so you can relabel it with the appropriate concentration." +
+                        "\n Round your answer to the nearest integer.",
                         vTwo, cTwo, vOne);
+                System.out.println(question);
+                userResponse = validateInput();
+                answerBeforeRound = (float) (cTwo * vTwo) / vOne; //Prevent loss of precision due to Int Division
+                answer = (Math.round(answerBeforeRound));
+                checkAnswer(userResponse, answer, questionType);
                 break;
-            // Solve for cTwo
+
+            // Solve for vOne
             case 3:
                 //int cOne, vOne, cTwo, vTwo;
                 vOne = numGenerator(VONE_LOWEST_VALUE, VONE_HIGHEST_VALUE);
                 cOne = numGenerator(CONE_LOWEST_VALUE, CONE_HIGHEST_VALUE);
-                cTwo = numGenerator(CTWO_LOWEST_VALUE, CTWO_HIGHEST_VALUE);
-                question = String.format("You are trying to make s%mL of a a s%x solution " +
-                        "from a s%x contrated stock of TAE. How many uL of s%x TAE do you need to add " +
-                        "to how much water, to make s%mL of s%x TAE.");
-                break;
+                water = numGenerator(CTWO_LOWEST_VALUE, CTWO_HIGHEST_VALUE);
+                question = String.format("You accidentally mixed some reagent and created a solution. " +
+                        "\nYou mixed %smL of %sx TAE with %smL of water. What is the concentration" +
+                        "of you final solution? \nRound your answer to the nearest integer.",
+                        vOne, cOne, water);
+                System.out.println(question);
+                userResponse = validateInput();
 
+                vTwo = vOne + water;
+                answerBeforeRound = (float) (cOne * vOne) / vTwo; //Prevent loss of precision due to Int Division
+                answer = (Math.round(answerBeforeRound));
+                checkAnswer(userResponse, answer, questionType);
+                break;
         }
     }
 
+    public static int validateInput() {
+        Scanner scan = new Scanner(System.in);
+        int userResponse = 0;
 
+
+
+        try {
+            userResponse = scan.nextInt();
+        } catch (Exception e) {
+            System.out.println("This is not a valid input");
+            validateInput();
+        }
+        return userResponse;
+    }
+
+        private static void checkAnswer(int userAttempt, int answer, int questionType) {
+            String[] units = {"","mL", "x", "x"};
+            if (userAttempt == answer)
+                System.out.printf("Perfect - %s%s is Correct!", userAttempt, units[questionType]);
+            else
+                System.out.printf("Not quite - %s%s is Incorrect.", userAttempt, units[questionType]);
+        }
+
+
+    // -----------------------------------------------------------------------------
     public static void punnettSquares() {
 
         //  Constant for Percentage Value of a Single Square of Punnett Square
