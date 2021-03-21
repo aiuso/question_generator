@@ -1,11 +1,103 @@
 import javax.swing.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class QuestionGenerator {
 
+    /*  Not Complete...
+        Generates question that asks user to convert a metric units
 
+     */
+    public static void unitConversionQuestion () {
+        int number = numGenerator(1,999);
+        double answer = 0;
+
+        // Generates random unit
+        String[] units = {"grams", "liters", "meters"};
+        String randomUnit = units[numGenerator(0, units.length-1)];
+
+        //Generate random unit prefixes; one for a starting value; one for the conversion value.
+        String[] metricPrefixList = {"kilo", "", "deci", "centi", "milli", "micro", "nano"};
+        double[] metricMagnitudeList = {1_000, 1, 0.1, 0.01, 0.001, 0.000_001, 0.000_000_001};
+        int randomIndexQ = numGenerator(0, metricPrefixList.length-1);
+        int randomIndexA = numGenerator(0, metricPrefixList.length-1);
+
+        // Prevents starting unit and final unit from being the same.
+        while (true) {
+            if (randomIndexQ == randomIndexA) {
+                randomIndexA = numGenerator(0, metricPrefixList.length-1);
+            } else
+                break;
+        }
+
+        //Asses how to calculate unit conversion based one which units are present.
+        if (randomIndexQ < randomIndexA && randomIndexQ != 0)
+            answer = number * (metricMagnitudeList[randomIndexQ] / (metricMagnitudeList[randomIndexA]));
+        else if (randomIndexQ > randomIndexA || randomIndexQ == 0)
+            answer = number * metricMagnitudeList[randomIndexQ] * (1/metricMagnitudeList[randomIndexA]);
+
+
+        String question = String.format("Convert %s %s%s to %s%s.",
+                number, metricPrefixList[randomIndexQ], randomUnit,
+                metricPrefixList[randomIndexA], randomUnit);
+
+        System.out.println(question);
+        System.out.print(answer + " " + metricPrefixList[randomIndexA] + randomUnit);
+    }
+
+
+    // ------------------------------------------------------------------------------------------
+
+
+    /*  Not Complete...
+        Generates question that asks user what is the concentration of a
+        solution after a particular number of dilutions
+
+        Note: need a way to validate answers using scientific notation.
+        Might be a good idea to input significant digit values and relevant exponent
+     */
+    public static void serialDilutionQuestion() {
+
+        int stockConcentration= numGenerator(25, 100);
+        int numberOfDilutions = numGenerator(2, 10);
+        int volumeToDilute = numGenerator(1, 10);
+        int diluentVolume = numGenerator(11, 30);
+        int finalTube = numGenerator(1, numberOfDilutions);
+
+        String question = String.format("You're mixing solutions for a serial dilution." +
+                "\nYou have a %s stock solution and %s test tubes each with %s of diluent." +
+                "\nYou are going to add %s of your stock solution to your first tube." +
+                "\nAfter mixing the first tube, you'll then take the same amount of volume and transfer it to tube 2" +
+                "\nand repeat for each tube. What is the total dilution at tube %s.",
+                stockConcentration, numberOfDilutions, diluentVolume, volumeToDilute, finalTube);
+        System.out.println(question);
+
+        double tubeDilution = ((double) volumeToDilute/(volumeToDilute+diluentVolume));
+        double userResponse = validateSerialDilutionInput();
+
+        double answer = stockConcentration * Math.pow(tubeDilution, finalTube);
+        checkAnswer(userResponse, answer, 0);
+
+        System.out.println(answer);
+    }
+
+    public static double validateSerialDilutionInput() {
+        Scanner scan = new Scanner(System.in);
+        double userResponse = 0;
+
+        try {
+            userResponse = scan.nextDouble();
+        } catch (Exception e) {
+            System.out.println("This is not a valid input");
+            validateSerialDilutionInput();
+        }
+        return userResponse;
+    }
+
+    // -----------------------------------------------------------------------------------------
     public static void stockDilutionQuestion() {
         Scanner scan = new Scanner(System.in);
 
@@ -106,8 +198,6 @@ public class QuestionGenerator {
         Scanner scan = new Scanner(System.in);
         int userResponse = 0;
 
-
-
         try {
             userResponse = scan.nextInt();
         } catch (Exception e) {
@@ -117,13 +207,21 @@ public class QuestionGenerator {
         return userResponse;
     }
 
-        private static void checkAnswer(int userAttempt, int answer, int questionType) {
-            String[] units = {"","mL", "x", "x"};
-            if (userAttempt == answer)
-                System.out.printf("Perfect - %s%s is Correct!", userAttempt, units[questionType]);
-            else
-                System.out.printf("Not quite - %s%s is Incorrect.", userAttempt, units[questionType]);
-        }
+    private static void checkAnswer(int userAttempt, int answer, int questionType) {
+        String[] units = {"","mL", "x", "x"};
+        if (userAttempt == answer)
+            System.out.printf("Perfect - %s%s is Correct!", userAttempt, units[questionType]);
+        else
+            System.out.printf("Not quite - %s%s is Incorrect.", userAttempt, units[questionType]);
+    }
+
+    private static void checkAnswer(double userAttempt, double answer, int questionType) {
+        String[] units = {"","mL", "x", "x"};
+        if (userAttempt == answer)
+            System.out.printf("Perfect - %s%s is Correct!", userAttempt, units[questionType]);
+        else
+            System.out.printf("Not quite - %s%s is Incorrect.", userAttempt, units[questionType]);
+    }
 
 
     // -----------------------------------------------------------------------------
