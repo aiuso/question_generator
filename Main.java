@@ -7,8 +7,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
 
-
-        QuestionGenerator.unitConversionQuestion();
+        QuestionGenerator.punnettSquares();
 /*
         Double x = .00000004544;
         String s = x.toString();

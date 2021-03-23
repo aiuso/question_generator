@@ -22,12 +22,12 @@ function generatePunnetQuestion() {
     childResults = calculateChildOutcomes(punnettSquare, childResults);
 
     // Genotyping Percentage Calculation
-    childGenotype = genotypeStringArray[getRandomInt(3)];
+    childGenotype = genotypeStringArray[getRandomInt(0, 3)];
     answer = (childResults[childGenotype] * PROBABILITY_MULTIPLIER);
 
     // Scenario and Question for User
     var scenario = `You want to determine the possible genetic outcomes ` +
-    `for a particular ${geneExpressionType[getRandomInt(2)]} gene. \n` +
+    `for a particular ${geneExpressionType[getRandomInt(0, 2)]} gene. \n` +
     `You know that the male parent has a genotype that is ${genotypeTerm(maleGenotypeValues)} ` +
     `and that the female parent has a genotype is ${genotypeTerm(femaleGenotypeValues)}.`;
 
@@ -36,14 +36,14 @@ function generatePunnetQuestion() {
 
 
     // Print Question
-    console.log(scenario);
-    console.log(questionGenotype);
-    console.log(answer);
+    window.document.write(scenario);
+    window.document.write(questionGenotype);
+    window.document.write(answer);
 
     // Answer Key for Punnet Square
     answerPunnetSquare = punnettSquareGenotype(punnettSquare, "B");
     printPunnettSquare(answerPunnetSquare);
-    console.log("test");
+    window.document.write("test");
 }
 
 
@@ -146,16 +146,16 @@ function printPunnettSquare(matrix) {
     for (var i = 0; i < matrix.length; i++) {
         // length returns number of rows
         for (var j = 0; j < matrix[i].length; j++) {
-            console.log(matrix[i][j] + "\t");
+            window.document.write(matrix[i][j] + "\t");
         }
-        console.log();
+        window.document.write();
     }
 }
 
 
 function generateGenotype() {
     var parent = [];
-    var genotypeValue = getRandomInt(3);
+    var genotypeValue = getRandomInt(0, 3);
 
     switch (genotypeValue) {
         case 0:
@@ -175,9 +175,9 @@ function generateGenotype() {
     return parent;
 }
 
-
-function getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max));
+// Max = Not inclusive
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
 

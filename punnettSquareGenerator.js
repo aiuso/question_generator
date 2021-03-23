@@ -3,6 +3,7 @@ function generatePunnetQuestion() {
     var femaleGenotypeValues = generateGenotype();
     var maleGenotypeValues = generateGenotype();
 
+    punnettSquare[0][0] = "_"
     punnettSquare[0][1] = maleGenotypeValues[0];
     punnettSquare[0][2] = maleGenotypeValues[1];
     punnettSquare[1][0] = femaleGenotypeValues[0];
@@ -11,47 +12,72 @@ function generatePunnetQuestion() {
 
     // Generating Punnett Square Values
     punnettSquare = calculatePunnettSqaure(punnettSquare);
-    printPunnettSquare(punnettSquare);
+    //printPunnettSquare(punnettSquare);
 
+    childGenotype = genotypeStringArray[getRandomInt(0, 2)];
 
-    // Completing Punnett Square - Genotype Answer Key
-    var childResults = {"homozygous recessive": 0, 
-                    "heterozygous": 0,
-                    "homozygous dominant": 0};
-
-    childResults = calculateChildOutcomes(punnettSquare, childResults);
-
-    // Genotyping Percentage Calculation
-    childGenotype = genotypeStringArray[getRandomInt(3)];
-    answer = (childResults[childGenotype] * PROBABILITY_MULTIPLIER);
 
     // Scenario and Question for User
     var scenario = `You want to determine the possible genetic outcomes ` +
-    `for a particular ${geneExpressionType[getRandomInt(2)]} gene. \n` +
+    `for a particular ${geneExpressionType[getRandomInt(0, 1)]} gene. \n` +
     `You know that the male parent has a genotype that is ${genotypeTerm(maleGenotypeValues)} ` +
     `and that the female parent has a genotype is ${genotypeTerm(femaleGenotypeValues)}.`;
 
     var questionGenotype = `What is the chance that these parents have ` +
-            `a child who's genotype is ${childGenotype}`;
+            `a child who's genotype is ${childGenotype}.`;
 
 
     // Print Question
-    console.log(scenario);
-    console.log(questionGenotype);
-    console.log(answer);
+    document.getElementById('scenario').innerHTML= scenario;
+    //window.document.write(scenario);
+    document.getElementById('question').innerHTML= questionGenotype;
+}
+
+
+function checkPunnettAnswer() {
+    var userInput = document.getElementById("userInput").value;
+    // Completing Punnett Square - Genotype Answer Key
+    var childResults = {"homozygous recessive": 0, 
+    "heterozygous": 0,
+    "homozygous dominant": 0};
+    childResults = calculateChildOutcomes(punnettSquare, childResults);
+    correctAnswer = (childResults[childGenotype] * PROBABILITY_MULTIPLIER);
+
+    //
+    responseForCorrect = `Perfect - ${userInput}% is Correct!`;
+    responseForIncorrect = `Not quite - ${userInput}% is Incorrect.`;
+    // Genotyping Percentage Calculation
+
+    if (userInput == correctAnswer)
+        document.getElementById('returnAnswer').innerHTML= responseForCorrect;
+    else
+        document.getElementById('returnAnswer').innerHTML= responseForIncorrect;
 
     // Answer Key for Punnet Square
     answerPunnetSquare = punnettSquareGenotype(punnettSquare, "B");
-    printPunnettSquare(answerPunnetSquare);
-    console.log("test");
+    document.getElementById('punnettSquareAnswer').innerHTML= printPunnettSquare(answerPunnetSquare);
 }
 
+
+function printPunnettSquare(matrix) {
+    var table = "<table border=1>";
+    for (var i = 0; i < matrix.length; i++) {
+        table += "<tr>";
+        // length returns number of rows
+        for (var j = 0; j < matrix[i].length; j++) {
+            table += "<td>"+matrix[i][j]+"</td>";
+            //document.getElementById('punnettSquareAnswer').innerHTML= matrix[i][j] + "\t";
+        }
+        table += "</tr>";
+    }
+    table += "</table>"
+    return table;
+}
 
 
 function punnettSquareGenotype(punnetSquare, letter) {
     var punnettAnswerKey = [[],[],[]];
     punnettAnswerKey[0][0] = "_";
-
     for (var i = 0, j = 1; j < punnetSquare.length; j++) {
             switch (punnetSquare[i][j]) {
                 case 0:
@@ -62,7 +88,6 @@ function punnettSquareGenotype(punnetSquare, letter) {
                     break;
             }
         }
-
     for (var i = 1, j = 0; i < punnetSquare.length; i++) {
         switch (punnetSquare[i][j]) {
             case 0:
@@ -73,7 +98,6 @@ function punnettSquareGenotype(punnetSquare, letter) {
                 break;
         }
     }
-
     for (var n = 1; n < punnetSquare.length; n++) {
         for (var m = 1; m < punnetSquare.length; m++)
             switch (punnetSquare[n][m]) {
@@ -142,20 +166,12 @@ function calculatePunnettSqaure(matrix) {
 }
 
 
-function printPunnettSquare(matrix) {
-    for (var i = 0; i < matrix.length; i++) {
-        // length returns number of rows
-        for (var j = 0; j < matrix[i].length; j++) {
-            console.log(matrix[i][j] + "\t");
-        }
-        console.log();
-    }
-}
+
 
 
 function generateGenotype() {
     var parent = [];
-    var genotypeValue = getRandomInt(3);
+    var genotypeValue = getRandomInt(0, 2);
 
     switch (genotypeValue) {
         case 0:
@@ -175,12 +191,10 @@ function generateGenotype() {
     return parent;
 }
 
-
-function getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max));
+// Max Inclusive
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
-
-
 
 //  Constant for Percentage Value of a Single Square of Punnett Square
 var PROBABILITY_MULTIPLIER = 25;

@@ -1,5 +1,4 @@
 function stockDilutionQuestion() {
-    Scanner scan = new Scanner(System.in);
 
     // Constants for Random Value Ranges
     var VONE_LOWEST_VALUE = 10;
@@ -13,7 +12,7 @@ function stockDilutionQuestion() {
 
 
     var cOne, vOne, cTwo, vTwo;
-    var questionType = numGenerator(1, 1);
+    var questionType = getRandomInt(1, 1);
     var question;
     var questionWater;
     var userResponse;
@@ -28,9 +27,9 @@ function stockDilutionQuestion() {
         // Solve for vOn
         case 1:
             //Generate values for: cOne, cTwo, vTwo;
-            cOne = numGenerator(CONE_LOWEST_VALUE, CONE_HIGHEST_VALUE);
-            cTwo = numGenerator(CTWO_LOWEST_VALUE, CTWO_HIGHEST_VALUE);
-            vTwo = numGenerator(VTWO_LOWEST_VALUE, VTWO_HIGHEST_VALUE);
+            cOne = getRandomInt(CONE_LOWEST_VALUE, CONE_HIGHEST_VALUE);
+            cTwo = getRandomInt(CTWO_LOWEST_VALUE, CTWO_HIGHEST_VALUE);
+            vTwo = getRandomInt(VTWO_LOWEST_VALUE, VTWO_HIGHEST_VALUE);
             question = `You are trying to make ${vTwo}mL of a ${cTwo}x solution ` +
                     `from a ${cOne}x concentrated stock of TAE. \nWe'll need to determine ` +
                     `how much stock solution to add to a particular volume of water to make this solution. ` +
@@ -53,9 +52,9 @@ function stockDilutionQuestion() {
         // Solve for cOne
         case 2:
             //Generate values for: vOne, cTwo, vTwo;
-            vOne = numGenerator(VONE_LOWEST_VALUE, VONE_HIGHEST_VALUE);
-            cTwo = numGenerator(CTWO_LOWEST_VALUE, CTWO_HIGHEST_VALUE);
-            vTwo = numGenerator(VTWO_LOWEST_VALUE, VTWO_HIGHEST_VALUE);
+            vOne = getRandomInt(VONE_LOWEST_VALUE, VONE_HIGHEST_VALUE);
+            cTwo = getRandomInt(CTWO_LOWEST_VALUE, CTWO_HIGHEST_VALUE);
+            vTwo = getRandomInt(VTWO_LOWEST_VALUE, VTWO_HIGHEST_VALUE);
             question = `The label on your stock TAE solution has been lost! \n` +
                     `You know that you just made ${vTwo}mL of ${cTwo}x TAE solution. You also know ` +
                     `that you added ${vOne}mL of the stock in making your solution. ` +
@@ -71,13 +70,13 @@ function stockDilutionQuestion() {
         // Solve for vOne
         case 3:
             //Generate values for: cOne, vOne, water;
-            vOne = numGenerator(VONE_LOWEST_VALUE, VONE_HIGHEST_VALUE);
-            cOne = numGenerator(CONE_LOWEST_VALUE, CONE_HIGHEST_VALUE);
-            water = numGenerator(CTWO_LOWEST_VALUE, CTWO_HIGHEST_VALUE);
+            vOne = getRandomInt(VONE_LOWEST_VALUE, VONE_HIGHEST_VALUE);
+            cOne = getRandomInt(CONE_LOWEST_VALUE, CONE_HIGHEST_VALUE);
+            water = getRandomInt(CTWO_LOWEST_VALUE, CTWO_HIGHEST_VALUE);
             question = `You accidentally mixed some reagent and created a new solution1! ` +
                     `\nYou mixed ${vOne}mL of ${cOne}x TAE with ${water}mL of water. What is the concentration` +
                     `of you final solution? \nRound your answer to the nearest integer.`;
-            console.log(question);
+            window.document.write(question);
             userResponse = validateInput();
 
             vTwo = vOne + water;
@@ -89,7 +88,6 @@ function stockDilutionQuestion() {
 }
 
 function validateInput() {
-    Scanner scan = new Scanner(System.in);
     var userResponse = 0;
     try {
         userResponse = scan.nextvar();
@@ -106,4 +104,9 @@ function checkAnswer(userAttempt, answer, questionType) {
         console.log(`Perfect - ${userAttempt}${units[questionType]} is Correct!`);
     else
         console.log(`Not quite - ${userAttempt}${units[questionType]} is Incorrect.`);
+}
+
+// Max exclusive
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
