@@ -5,7 +5,7 @@ var PROBABILITY_MULTIPLIER = 25;
 var punnettSquare = [[],[],[]];
 // Array String Reference Libraries
 var geneExpressionType = ["dominant", "recessive"];
-var expressionType = geneExpressionType[getRandomInt(0, 1)]
+var expressionType 
 var genotypeStringArray = ["homozygous recessive", "heterozygous", "homozygous dominant"];
 
 
@@ -21,6 +21,7 @@ function generatePunnettQuestion() {
     // Initializing Punnett Square with Parent Alleles
     var femaleGenotypeValues = generateGenotype();
     var maleGenotypeValues = generateGenotype();
+    expressionType = geneExpressionType[getRandomInt(0, 1)]
     //Inializing Punnett Square
     punnettSquare[0][0] = "_"
     punnettSquare[0][1] = maleGenotypeValues[0];
