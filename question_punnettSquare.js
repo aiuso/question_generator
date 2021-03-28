@@ -1,27 +1,25 @@
 //  Constant for Percentage Value of a Single Square of Punnett Square
 var PROBABILITY_MULTIPLIER = 25;
-// Determining Parent Genotypes
 
-var punnettSquare = [[],[],[]];
 // Array String Reference Libraries
+var punnettSquare = [[],[],[]];
 var geneExpressionType = ["dominant", "recessive"];
-var expressionType 
 var genotypeStringArray = ["homozygous recessive", "heterozygous", "homozygous dominant"];
-
-
+var expressionType
 var childGenotype;
 var childResult;
 var answerPunnetSquare;
 
 
 function generatePunnettQuestion() {
-    hideContent('phenotype');
     document.getElementById('returnGenotypeAnswer').innerHTML = " ";
     document.getElementById('punnettSquareAnswer').innerHTML = " ";
+    document.getElementById('phenotype').style.display = 'none';
+    document.getElementById('returnPhenotypeAnswer').innerHTML = " ";
     // Initializing Punnett Square with Parent Alleles
+    expressionType = geneExpressionType[getRandomInt(0, 1)]
     var femaleGenotypeValues = generateGenotype();
     var maleGenotypeValues = generateGenotype();
-    expressionType = geneExpressionType[getRandomInt(0, 1)]
     //Inializing Punnett Square
     punnettSquare[0][0] = "_"
     punnettSquare[0][1] = maleGenotypeValues[0];
@@ -41,6 +39,7 @@ function generatePunnettQuestion() {
     // Print Question
     document.getElementById('scenario').innerHTML= scenario;
     document.getElementById('genotypeQuestion').innerHTML= genotypeQuestion;
+    document.getElementById('genotypeButtons').style.display = 'inline';
 }
 
 function completePunnettSquare() {
@@ -49,7 +48,6 @@ function completePunnettSquare() {
         "homozygous dominant": 0};
     childResults = calculateChildOutcomes(punnettSquare, childResults);
 }   
-
 
 function checkGenotypeAnswer(userInput) {
     // Completing Punnett Square - Genotype Answer Key
@@ -66,7 +64,7 @@ function checkPhenotypeAnswer(userInput){
     if (expressionType == "recessive")
         correctAnswer = childResults['homozygous recessive'] * PROBABILITY_MULTIPLIER;
     else
-        correctAnswer = childResults['homozygous dominant'] + childResults['heterozygous'] * PROBABILITY_MULTIPLIER;
+        correctAnswer = (childResults['homozygous dominant'] + childResults['heterozygous']) * PROBABILITY_MULTIPLIER;
     //Check answer and write output
     checkAnswerValue(userInput, correctAnswer, 'returnPhenotypeAnswer');
 }
@@ -77,13 +75,10 @@ function checkAnswerValue(userInput, correctAnswer, writeLocation) {
     if (userInput == correctAnswer) {
         document.getElementById(writeLocation).innerHTML= responseForCorrect;
         if (writeLocation = 'returnGenotypeAnswer')
-            document.getElementById('phenotype').style.display = 'block';
+            document.getElementById('phenotype').style.display = 'inline';
     } else 
         document.getElementById(writeLocation).innerHTML= responseForIncorrect;
-    
-
 }
-
 
 function printPunnettSquare() {
     var answerPunnetSquare = punnettSquareGenotype(punnettSquare, "B");
@@ -100,29 +95,20 @@ function printPunnettSquare() {
     document.getElementById('punnettSquareAnswer').innerHTML= table;
 }
 
-
 function punnettSquareGenotype(punnetSquare, letter) {
     var punnettAnswerKey = [[],[],[]];
     punnettAnswerKey[0][0] = "_";
     for (var i = 0, j = 1; j < punnetSquare.length; j++) {
-            switch (punnetSquare[i][j]) {
-                case 0:
+            if (punnetSquare[i][j] == 0) 
                     punnettAnswerKey[i][j] = letter.toLowerCase();
-                    break;
-                case 1:
+            else if (punnetSquare[i][j] == 1) 
                     punnettAnswerKey[i][j] = letter.toUpperCase();
-                    break;
-            }
-        }
+    }
     for (var i = 1, j = 0; i < punnetSquare.length; i++) {
-        switch (punnetSquare[i][j]) {
-            case 0:
-                punnettAnswerKey[i][j] = letter.toLowerCase();
-                break;
-            case 1:
+        if (punnetSquare[i][j] == 0)
+            punnettAnswerKey[i][j] = letter.toLowerCase();
+        else if (punnetSquare[i][j] == 1)
                 punnettAnswerKey[i][j] = letter.toUpperCase();
-                break;
-        }
     }
     for (var n = 1; n < punnetSquare.length; n++) {
         for (var m = 1; m < punnetSquare.length; m++)
@@ -214,10 +200,4 @@ function generateGenotype() {
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
-
-
-function hideContent(elementID) {
-    var element = document.getElementById(elementID);
-        element.style.display = "none";
-}
 

@@ -3,60 +3,85 @@
 <html lang="en">
     <head>
         <script type="text/javascript" src="functions.js"></script>
-        <script type="text/javascript" src="punnettSquareGenerator.js"></script>
-        <script type="text/javascript" src="stockDilutionQuestion.js"></script>
+        <script type="text/javascript" src="question_punnettSquare.js"></script>
+        <script type="text/javascript" src="question_stockDilution.js"></script>
         <link href="question_stylesheet.css" rel="stylesheet" />
     </head>
 
-    <body onload=generatePunnettQuestion()>
-        <div>
-            <p>
-                <button type = "button" id="button" onclick=generatePunnettQuestion()>
-                    Click for Question </button>  
-            </p>
-            
-            <p id='scenario'></p>
-            <p id='genotypeQuestion'></p>
-            <div>
-                <button type ="button" class="choiceG" id="0percent" value=0 
-                    onclick=checkGenotypeAnswer(document.getElementById("0percent").value)>0%</button>  
-                <button type ="button" class="choiceG" id="25percent" value=25 
-                    onclick=checkGenotypeAnswer(document.getElementById("25percent").value)>25%</button> 
-                <button type ="button" class="choiceG" id="50percent" value=50 
-                    onclick=checkGenotypeAnswer(document.getElementById("50percent").value)>50%</button>  
-                <button type ="button" class="choiceG" id="75percent" value=75 
-                    onclick=checkGenotypeAnswer(document.getElementById("75percent").value)>75%</button>  
-                <button type ="button" class="choiceG" id="100percent" value=100 
-                    onclick=checkGenotypeAnswer(document.getElementById("100percent").value)>100%</button>  
-            </div>
-            <p>
-    
-            <p id="returnGenotypeAnswer">
-            </p>
-        </div>
-        <div>
-            <button type ="button" id="showPunnetSquare" onclick=printPunnettSquare()>Show Punnet Square</button>  
-        </p>
-        </div>
-        <p id="punnettSquareAnswer"></p>
-        <p id='questionPhenotype'></p>
-        <div id='phenotype' >
-                <p id='phenotypeQuestion'>What is the chance of observing the expression of this gene?</p>
-            <div id='phentypeAnswerChoices'>
-                <button type ="button" class="choiceP" id="0percent" value=0 
-                    onclick=checkPhenotypeAnswer(document.getElementById("0percent").value)>0%</button>  
-                <button type ="button" class="choiceP" id="25percent" value=25 
-                    onclick=checkPhenotypeAnswer(document.getElementById("25percent").value)>25%</button> 
-                <button type ="button" class="choiceP" id="50percent" value=50 
-                    onclick=checkPhenotypeAnswer(document.getElementById("50percent").value)>50%</button>  
-                <button type ="button" class="choiceP" id="75percent" value=75 
-                    onclick=checkPhenotypeAnswer(document.getElementById("75percent").value)>75%</button>  
-                <button type ="button" class="choiceP" id="100percent" value=100 
-                    onclick=checkPhenotypeAnswer(document.getElementById("100percent").value)>100%</button>
-            </div>
-            <p id=returnPhenotypeAnswer></p>
-        </div>
+    <body>
+        <!--  Punnet Sqaure Question -->
 
+        <section id=question>
+            <div>
+                <p>
+                    <button type="button" id="newQuestion" onclick=generatePunnettQuestion()>
+                        Click for Question </button>  
+                </p>
+                <div id="genotype">
+                    <p id='scenario'></p>
+                    <p id='genotypeQuestion'></p>
+                    <div id=genotypeButtons style="display:none">
+                        <button type ="button" class="choiceG" id="0percent" value=0 
+                            onclick=checkGenotypeAnswer(document.getElementById("0percent").value)>0%</button>  
+                        <button type ="button" class="choiceG" id="25percent" value=25 
+                            onclick=checkGenotypeAnswer(document.getElementById("25percent").value)>25%</button> 
+                        <button type ="button" class="choiceG" id="50percent" value=50 
+                            onclick=checkGenotypeAnswer(document.getElementById("50percent").value)>50%</button>  
+                        <button type ="button" class="choiceG" id="75percent" value=75 
+                            onclick=checkGenotypeAnswer(document.getElementById("75percent").value)>75%</button>  
+                        <button type ="button" class="choiceG" id="100percent" value=100 
+                            onclick=checkGenotypeAnswer(document.getElementById("100percent").value)>100%</button>  
+                    </div>
+                    <p id="returnGenotypeAnswer"></p>
+                <div>
+            </div>
+         
+            <div>
+                <button type ="button" id="showPunnetSquare" onclick=printPunnettSquare()>Show Punnett Square</button>  
+                <p id="punnettSquareAnswer"></p>
+            </div>
+
+            <p id='questionPhenotype'></p>
+            <div id='phenotype' style="display:none">
+                <p id='phenotypeQuestion'>What is the chance of observing the expression of this gene?
+                </p>
+                <div id='phentypeAnswerChoices'>
+                    <button type ="button" class="choiceP" id="0percent" value=0 
+                        onclick=checkPhenotypeAnswer(document.getElementById("0percent").value)>0%</button>  
+                    <button type ="button" class="choiceP" id="25percent" value=25 
+                        onclick=checkPhenotypeAnswer(document.getElementById("25percent").value)>25%</button> 
+                    <button type ="button" class="choiceP" id="50percent" value=50 
+                        onclick=checkPhenotypeAnswer(document.getElementById("50percent").value)>50%</button>  
+                    <button type ="button" class="choiceP" id="75percent" value=75 
+                        onclick=checkPhenotypeAnswer(document.getElementById("75percent").value)>75%</button>  
+                    <button type ="button" class="choiceP" id="100percent" value=100 
+                        onclick=checkPhenotypeAnswer(document.getElementById("100percent").value)>100%</button>
+                </div>
+                <p id=returnPhenotypeAnswer></p>
+            </div>
+        </section>
+
+            <p>----------------------------------------------------------------------------------------------------------------------</p>
+        <!--  Stock Dilution Question -->
+        <section>
+            <div id='stock-dilution'>
+                <button type = "button" id="button" onclick=generateStockDilutionQuestion()>Click for Question </button>  
+                <p id='stockDilution-question'></p>
+                <p id="stockDilution-answer"></p>
+                <p id='mixture-question'></p>
+                <p id='mixture-answer'></p>
+                    <div class="stockDilution-textbox" id='stockDilution-textbox' style='visibility:hidden'>
+                        <label for="sd-input-box" class="sd-input-box">
+                            <input type="text" id="sd-input-box" placeholder="&nbsp;">
+                            <span class="label">Answer</span>
+                            <span class="focus-bg"></span>
+                        </label>
+                        <button type ="button" class="submit" id="sd-submit" 
+                                    onclick=setUserInput(document.getElementById("sd-input-box").value)>Submit
+                                </button>
+                    </div>
+            </div>
+        </section>
     </body>
 </html>
 
