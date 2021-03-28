@@ -9,13 +9,10 @@ var answerBeforeRound;
 var answer;
 var count;
 var waterQuestion; 
+var a2;
 
 function generateStockDilutionQuestion() {
-    waterQuestion = false;
-    document.getElementById('stockDilution-textbox').style.visibility = 'visible';
-    document.getElementById('stockDilution-answer').innerHTML = " ";
-    document.getElementById('mixture-question').innerHTML = " ";
-    document.getElementById('mixture-answer').innerHTML = " ";
+    resetPage();
     // Constants for Random Value Ranges
     var VONE_LOWEST_VALUE = 10;
     var VONE_HIGHEST_VALUE = 500;
@@ -27,11 +24,11 @@ function generateStockDilutionQuestion() {
     var VTWO_HIGHEST_VALUE = 10000;
 
     //Randomly choose question type
-    questionType = getRandomInt(1, 1);
+    questionType = getRandomInt(1, 3);
 
     //Question types
     switch (questionType) {
-        // Solve for vOn
+        // Solve for vOne
         case 1:
             //Generate values for: cOne, cTwo, vTwo;
             cOne = getRandomInt(CONE_LOWEST_VALUE, CONE_HIGHEST_VALUE);
@@ -44,10 +41,8 @@ function generateStockDilutionQuestion() {
                     `\nFirst, how many mL of ${cOne}x TAE will we need? ` +
                     `\nRound your answer to the nearest integer`;
 
-            printToPage(question, 'stockDilution-question')
-                        //Calculate answer
-            answerBeforeRound = (cTwo * vTwo) / cOne; //Prevent loss of precision due to int Division
-            answer = Math.round(answerBeforeRound);
+            printToPage(question, 'stockDilution-question');
+            answer = Math.round((cTwo * vTwo) / cOne);
             break;
 
         // Solve for cOne
@@ -61,11 +56,9 @@ function generateStockDilutionQuestion() {
                     `that you added ${vOne}mL of the stock in making your solution. ` +
                     `\nCalculate the concentration of the stock solution so you can relabel it with the appropriate concentration.` +
                     `\n Round your answer to the nearest integer.`;
-            console.log(question);
-            userResponse = validateInput();
-            answerBeforeRound = (float) (cTwo * vTwo) / vOne; //Prevent loss of precision due to Int Division
-            answer = (Math.round(answerBeforeRound));
-            checkAnswer(userResponse, answer, questionType);
+
+            printToPage(question, 'stockDilution-question')
+            answer = Math.round((cTwo * vTwo) / vOne);
             break;
 
         // Solve for vOne
@@ -73,17 +66,14 @@ function generateStockDilutionQuestion() {
             //Generate values for: cOne, vOne, water;
             vOne = getRandomInt(VONE_LOWEST_VALUE, VONE_HIGHEST_VALUE);
             cOne = getRandomInt(CONE_LOWEST_VALUE, CONE_HIGHEST_VALUE);
-            water = getRandomInt(CTWO_LOWEST_VALUE, CTWO_HIGHEST_VALUE);
-            question = `You accidentally mixed some reagent and created a new solution1! ` +
+            water = getRandomInt(VTWO_LOWEST_VALUE, VTWO_HIGHEST_VALUE);
+            question = `You accidentally mixed some reagent and created a new solution! ` +
                     `\nYou mixed ${vOne}mL of ${cOne}x TAE with ${water}mL of water. What is the concentration` +
                     `of you final solution? \nRound your answer to the nearest integer.`;
-            window.document.write(question);
-            userResponse = validateInput();
+            printToPage(question, 'stockDilution-question');
 
             vTwo = vOne + water;
-            answerBeforeRound = (float) (cOne * vOne) / vTwo; //Prevent loss of precision due to var Division
-            answer = (Math.round(answerBeforeRound));
-            checkAnswer(userResponse, answer, questionType);
+            answer = Math.round((cOne * vOne) / vTwo);
             break;
     }
 }
@@ -93,9 +83,7 @@ function mixtureQuestion() {
     `\nRound your answer to the nearest integer.`;
     printToPage(questionWater, 'mixture-question');
     document.getElementById('mixture-question').style.visibility = 'visible';
-    //userResponseWater = validateInput();
     answer = vTwo - answer;
-    //checkAnswer(userResponseWater, water, questionType);
 }
 
 
@@ -144,4 +132,13 @@ function getRandomInt(min, max) {
 
 function printToPage(thingToPrint, whereToPrint) {
     document.getElementById(whereToPrint).innerHTML= thingToPrint;
+}
+
+function resetPage() {
+        //Reset content on webpage
+        waterQuestion = false;
+        document.getElementById('stockDilution-textbox').style.visibility = 'visible';
+        document.getElementById('stockDilution-answer').innerHTML = " ";
+        document.getElementById('mixture-question').innerHTML = " ";
+        document.getElementById('mixture-answer').innerHTML = " ";
 }
