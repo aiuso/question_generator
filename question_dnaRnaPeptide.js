@@ -50,15 +50,22 @@ var RNA_TO_DNA = {
 
 
 var lengthOfPeptide = getRandomInt(4, 9);
+var userInput;
+var isRNACorrect = false;
 
 function generateTrascriptQuestion() {
+    document.getElementById("dna-template").innerHTML = " ";
     createPeptide();
     createRNA();
     formatPeptideAnswer();
     formatRNAAnswer();
+    createDNA();
+    document.getElementById("dna-template").innerHTML = dna;
+    document.getElementById('rna-peptide-textbox').style.visibility = 'visible';
     }
 
 function createPeptide() {
+    peptide = [];
     for (let i = 0; i <= lengthOfPeptide; i++) {
         let random  = getRandomInt(0, peptideArray.length);
         let randomPeptide = peptideArray[random];
@@ -67,6 +74,7 @@ function createPeptide() {
 }
 
 function createRNA() {
+    rna = [];
     for (let i = 0; i < peptide.length; i++) {
         let aminoAcid = peptide[i];
         let max = codonDictionary[aminoAcid].length;
@@ -76,6 +84,7 @@ function createRNA() {
 }
 
 function formatPeptideAnswer() {
+    peptideAnswer = "";
     peptideAnswer = startPeptide
     for (let i = 0; i < peptide.length; i++) {
         peptideAnswer += "-" + peptide[i] ;
@@ -83,6 +92,7 @@ function formatPeptideAnswer() {
 }
 
 function formatRNAAnswer() {
+    rnaAnswer = "";
     rnaAnswer = nucleotideWrap() + startCodon;
     for (let i = 0; i < peptide.length; i++) {
         rnaAnswer += rna[i];
@@ -102,10 +112,34 @@ function nucleotideWrap() {
 }
 
 function createDNA() {
+    dna = "";
     let rna = rnaAnswer.split("");
     rna.forEach(nucelotide => {
         dna += RNA_TO_DNA[nucelotide];
     });
+}
+
+function setUserInput(value) {
+    userInput = value;
+    if (!isRNACorrect)
+        checkRNA;
+    else
+        checkPeptide;
+}
+
+function checkRNA() {
+    var correctAnswer = "Perfect!"
+    var incorrectAnswer = "Try again!"
+    if (rnaAnswer == userInput) {
+        isRNACorrect = true;
+        document.getElementById('rna-response').innerHTML = correctAnswer;
+    } else
+        document.getElementById('rna-response').innerHTML = incorrectAnswer;
+
+}
+
+function checkPeptide() {
+    
 }
 
 // Max is exclusive
