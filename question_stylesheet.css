@@ -38,7 +38,7 @@ body {
     box-sizing: border-box;
   }
   
-  .sd-input-box {
+  .answer-textbox {
     position: relative;
     margin: auto;
     width: 100%;
@@ -46,7 +46,7 @@ body {
     border-radius: 3px;
     overflow: hidden;
   }
-  .sd-input-box .label {
+  .answer-textbox .label {
     position: absolute;
     top: 20px;
     left: 12px;
@@ -58,7 +58,7 @@ body {
     transition: all 0.2s ease;
     pointer-events: none;
   }
-  .sd-input-box .focus-bg {
+  .answer-textbox .focus-bg {
     position: absolute;
     top: 0;
     left: 0;
@@ -70,7 +70,7 @@ body {
     transform-origin: left;
   }
   
-  .sd-input-box input {
+  .answer-textbox input {
     -webkit-appearance: none;
     -moz-appearance: none;
          appearance: none;
@@ -86,32 +86,32 @@ body {
     color: #000;
     transition: all 0.15s ease;
   }
-  .sd-input-box input:hover {
+  .answer-textbox input:hover {
     background: rgba(0, 0, 0, 0.04);
     box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.5);
   }
-  .sd-input-box input:not(:-moz-placeholder-shown) + .label {
+  .answer-textbox input:not(:-moz-placeholder-shown) + .label {
     color: rgba(0, 0, 0, 0.5);
     transform: translate3d(0, -12px, 0) scale(0.75);
   }
-  .sd-input-box input:not(:-ms-input-placeholder) + .label {
+  .answer-textbox input:not(:-ms-input-placeholder) + .label {
     color: rgba(0, 0, 0, 0.5);
     transform: translate3d(0, -12px, 0) scale(0.75);
   }
-  .sd-input-box input:not(:placeholder-shown) + .label {
+  .answer-textbox input:not(:placeholder-shown) + .label {
     color: rgba(0, 0, 0, 0.5);
     transform: translate3d(0, -12px, 0) scale(0.75);
   }
-  .sd-input-box input:focus {
+  .answer-textbox input:focus {
     background: rgba(0, 0, 0, 0.05);
     outline: none;
     box-shadow: inset 0 -2px 0 #0077FF;
   }
-  .sd-input-box input:focus + .label {
+  .answer-textbox input:focus + .label {
     color: #0077FF;
     transform: translate3d(0, -12px, 0) scale(0.75);
   }
-  .sd-input-box input:focus + .label + .focus-bg {
+  .answer-textbox input:focus + .label + .focus-bg {
     transform: scaleX(1);
     transition: all 0.1s ease;
   }

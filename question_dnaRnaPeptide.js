@@ -1,13 +1,14 @@
 var CODON_LENGTH = 3;
 var dnaSequence;
 var dnaSequenceLength;
+var lengthOfPeptide = getRandomInt(4, 9);
 
 var dna = "";
 var rna = [];
 var rnaAnswer;
+var isRNACorrect = false;
 var peptide = [];
 var peptideAnswer;
-
 
 var dnaNucleotides = ["A", "T", "C", "G"];
 var rnaNucleotides = ["A", "U", "C", "G"];
@@ -48,20 +49,23 @@ var RNA_TO_DNA = {
     "C": "G"
 }
 
+var rnaQuestionPrompt = "Given the following DNA template strand, what would be the sequence of " +
+    " nucleotide for the transcripted mRNA.";
+var peptideQuestionPrompt = "What is the amino acide sequence of the peptide " +
+    "that would be made from this mRNA? Input you answer as the three letter amino acid name follow by '-'. " +
+    "For example: Met-Try-Leu";
 
-var lengthOfPeptide = getRandomInt(4, 9);
-var userInput;
-var isRNACorrect = false;
 
 function generateTrascriptQuestion() {
-    document.getElementById("dna-template").innerHTML = " ";
+    resetPage();
     createPeptide();
     createRNA();
     formatPeptideAnswer();
     formatRNAAnswer();
     createDNA();
+    document.getElementById("rna-question").innerHTML = rnaQuestionPrompt;
     document.getElementById("dna-template").innerHTML = dna;
-    document.getElementById('rna-peptide-textbox').style.visibility = 'visible';
+    document.getElementById('transcription-translation-textbox').style.visibility = 'visible';
     }
 
 function createPeptide() {
@@ -119,27 +123,36 @@ function createDNA() {
     });
 }
 
+var userInput;
 function setUserInput(value) {
-    userInput = value;
+    userInput = value.trim().toUpperCase();
     if (!isRNACorrect)
-        checkRNA;
+        checkRNA();
     else
-        checkPeptide;
+        checkPeptide();
 }
 
+var correctAnswer = "Perfect!";
+var incorrectAnswer = "Try again!";
 function checkRNA() {
-    var correctAnswer = "Perfect!"
-    var incorrectAnswer = "Try again!"
     if (rnaAnswer == userInput) {
         isRNACorrect = true;
         document.getElementById('rna-response').innerHTML = correctAnswer;
+        document.getElementById('peptide-question').innerHTML = peptideQuestionPrompt;
+        document.getElementById('rna-transcript').innerHTML = rnaAnswer;
+        document.getElementById('rna-peptide-textbox').value = " ";
     } else
         document.getElementById('rna-response').innerHTML = incorrectAnswer;
 
 }
 
 function checkPeptide() {
-    
+    if (peptideAnswer.toUpperCase() == userInput) {
+        document.getElementById('peptide-answer').innerHTML = correctAnswer + " " + peptideAnswer;
+        document.getElementById('rna-peptide-textbox').value = " ";
+    } else {
+        document.getElementById('peptide-answer').innerHTML = incorrectAnswer;
+    }
 }
 
 // Max is exclusive
@@ -147,4 +160,14 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  function resetPage() {
+    document.getElementById('rna-peptide-textbox').value = " ";
+    document.getElementById("dna-template").innerHTML = " ";
+    document.getElementById("transcription-translation-textbox").value = " ";
+    document.getElementById('rna-transcript').innerHTML = " ";
+    document.getElementById('rna-response').innerHTML = " ";
+    document.getElementById('peptide-question').innerHTML = " ";
+    document.getElementById('peptide-answer').innerHTML = " ";
   }

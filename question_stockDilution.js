@@ -9,7 +9,6 @@ var answerBeforeRound;
 var answer;
 var count;
 var waterQuestion; 
-var a2;
 
 function generateStockDilutionQuestion() {
     resetPage();

@@ -4,7 +4,7 @@
     <head>
         <script type="text/javascript" src="functions.js"></script>
         <script type="text/javascript" src="question_punnettSquare.js"></script>
-        <script type="text/javascript" src="question_stockDilution.js"></script>
+        <!--<script type="text/javascript" src="question_stockDilution.js"></script>-->
         <script type="text/javascript" src="question_dnaRnaPeptide.js"></script>
         <link href="question_stylesheet.css" rel="stylesheet" />
     </head>
@@ -71,8 +71,8 @@
                 <p id="stockDilution-answer"></p>
                 <p id='mixture-question'></p>
                 <p id='mixture-answer'></p>
-                    <div class="stockDilution-textbox" id='stockDilution-textbox' style='visibility:hidden'>
-                        <label for="sd-input-box" class="sd-input-box">
+                    <div id='stockDilution-textbox' style='visibility:hidden'>
+                        <label for="answer-textbox" class="answer-textbox">
                             <input type="text" id="sd-input-box" placeholder="&nbsp;">
                             <span class="label">Answer</span>
                             <span class="focus-bg"></span>
@@ -89,17 +89,21 @@
         <section>
             <div>
                 <button type = "button" id="button" onclick=generateTrascriptQuestion()>Click for Question </button>  
+                <p id='rna-question'></p>
                 <p id='dna-template'></p>
+                <p id='rna-transcript'></p>
                 <p id='rna-response'></p>
+                <p id='peptide-question'></p>
+                <p id='peptide-answer'></p>
             </div>
-            <div class="stockDilution-textbox" id='rna-peptide-textbox' style='visibility:hidden'>
-                <label for="sd-input-box" class="sd-input-box">
-                    <input type="text" id="sd-input-box" placeholder="&nbsp;">
+            <div id='transcription-translation-textbox' style='visibility:hidden'>
+                <label for="answer-textbox" class="answer-textbox">
+                    <input type="text" id="rna-peptide-textbox" placeholder="&nbsp;">
                     <span class="label">Answer</span>
                     <span class="focus-bg"></span>
                 </label>
                 <button type ="button" class="submit" id="sd-submit" 
-                            onclick=setUserInput(document.getElementById("sd-input-box").value)>Submit
+                            onclick=setUserInput(document.getElementById("rna-peptide-textbox").value)>Submit
                         </button>     
         </section>
     </body>
