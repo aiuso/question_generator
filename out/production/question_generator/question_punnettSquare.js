@@ -11,51 +11,74 @@ var childResult;
 var answerPunnetSquare;
 
 
-// Main function --------------------------------------------------------------------------------------
 function generatePunnettQuestion() {
     document.getElementById('returnGenotypeAnswer').innerHTML = " ";
     document.getElementById('punnettSquareAnswer').innerHTML = " ";
     document.getElementById('phenotype').style.display = 'none';
     document.getElementById('returnPhenotypeAnswer').innerHTML = " ";
-
     // Initializing Punnett Square with Parent Alleles
     expressionType = geneExpressionType[getRandomInt(0, 1)]
     var femaleGenotypeValues = generateGenotype();
     var maleGenotypeValues = generateGenotype();
-
     //Inializing Punnett Square
     punnettSquare[0][0] = "_"
     punnettSquare[0][1] = maleGenotypeValues[0];
     punnettSquare[0][2] = maleGenotypeValues[1];
     punnettSquare[1][0] = femaleGenotypeValues[0];
     punnettSquare[2][0] = femaleGenotypeValues[1];
-
     // Generating Punnett Square Values
     punnettSquare = calculatePunnettSqaure(punnettSquare);
     childGenotype = genotypeStringArray[getRandomInt(0, 2)];
-
-    // Scenario and question prompts
+    // Scenario and Question for User
     var scenario = `You want to determine the possible genetic outcomes ` +
     `for a particular ${expressionType} gene. \n` +
     `You know that the male parent has a genotype that is ${genotypeTerm(maleGenotypeValues)} ` +
     `and that the female parent has a genotype is ${genotypeTerm(femaleGenotypeValues)}.`;
     var genotypeQuestion = `What is the chance that these parents have ` +
             `a child who's genotype is ${childGenotype}.`;
-
-    // Print Question 
+    // Print Question
     document.getElementById('scenario').innerHTML= scenario;
     document.getElementById('genotypeQuestion').innerHTML= genotypeQuestion;
     document.getElementById('genotypeButtons').style.display = 'inline';
 }
 
-
-// Punnett Square Functions  ----------------------------------------------------
 function completePunnettSquare() {
     childResults = {"homozygous recessive": 0, 
         "heterozygous": 0,
         "homozygous dominant": 0};
     childResults = calculateChildOutcomes(punnettSquare, childResults);
-} 
+}   
+
+function checkGenotypeAnswer(userInput) {
+    // Completing Punnett Square - Genotype Answer Key
+
+    //Answer calcuation
+    completePunnettSquare();
+    correctAnswer = (childResults[childGenotype] * PROBABILITY_MULTIPLIER);
+    //Check answer and write output
+    checkAnswerValue(userInput, correctAnswer, 'returnGenotypeAnswer');
+}
+
+function checkPhenotypeAnswer(userInput){
+    //Calculate answer; dependent on whether gene is dominant or recessive.
+    if (expressionType == "recessive")
+        correctAnswer = childResults['homozygous recessive'] * PROBABILITY_MULTIPLIER;
+    else
+        correctAnswer = (childResults['homozygous dominant'] + childResults['heterozygous']) * PROBABILITY_MULTIPLIER;
+    //Check answer and write output
+    checkAnswerValue(userInput, correctAnswer, 'returnPhenotypeAnswer');
+}
+
+function checkAnswerValue(userInput, correctAnswer, writeLocation) {
+    var responseForCorrect = `Perfect - ${userInput}% is Correct!`;
+    var responseForIncorrect = `Not quite - ${userInput}% is Incorrect.`;
+    if (userInput == correctAnswer) {
+        document.getElementById(writeLocation).innerHTML= responseForCorrect;
+        if (writeLocation = 'returnGenotypeAnswer')
+            document.getElementById('phenotype').style.display = 'inline';
+    } else 
+        document.getElementById(writeLocation).innerHTML= responseForIncorrect;
+}
 
 function printPunnettSquare() {
     var answerPunnetSquare = punnettSquareGenotype(punnettSquare, "B");
@@ -70,54 +93,6 @@ function printPunnettSquare() {
     }
     table += "</table>"
     document.getElementById('punnettSquareAnswer').innerHTML= table;
-}
-
-function calculatePunnettSqaure(matrix) {
-    for (var i = 1; i < matrix.length; i++) {
-        for (var j = 1; j < matrix.length; j++) {
-            matrix[i][j] = matrix[i - i][j] + matrix[i][j - j];
-        }
-    }
-    return matrix;
-}
-
-
-// Genotype  functions ------------------------------------------------------------------------------
-function generateGenotype() {
-    var parent = [];
-    var genotypeValue = getRandomInt(0, 2);
-    switch (genotypeValue) {
-        case 0:
-            parent[0] = 0;
-            parent[1] = 0;
-            break;
-        case 1:
-            parent[0] = 1;
-            parent[1] = 0;
-            break;
-        case 2:
-            parent[0] = 1;
-            parent[1] = 1;
-            break;
-    }
-    return parent;
-}
-
-function genotypeTerm(parentGenotype) {
-    var genotypeTerm;
-    var genotypeValue = parentGenotype[0] + parentGenotype[1];
-    switch (genotypeValue) {
-        case 0:
-            genotypeTerm = "homozygous recessive";
-            break;
-        case 1:
-            genotypeTerm = "heterozygous";
-            break;
-        case 2:
-            genotypeTerm = "homozygous dominant";
-            break;
-    }
-    return genotypeTerm;
 }
 
 function punnettSquareGenotype(punnetSquare, letter) {
@@ -152,32 +127,6 @@ function punnettSquareGenotype(punnetSquare, letter) {
     return punnettAnswerKey;
 }
 
-// User input and validation  ------------------------------------------------------------------------
-function checkPhenotypeAnswer(userInput){
-    if (expressionType == "recessive")
-        correctAnswer = childResults['homozygous recessive'] * PROBABILITY_MULTIPLIER;
-    else
-        correctAnswer = (childResults['homozygous dominant'] + childResults['heterozygous']) * PROBABILITY_MULTIPLIER;
-    checkAnswerValue(userInput, correctAnswer, 'returnPhenotypeAnswer');
-}
-
-function checkAnswerValue(userInput, correctAnswer, writeLocation) {
-    var responseForCorrect = `Perfect - ${userInput}% is Correct!`;
-    var responseForIncorrect = `Not quite - ${userInput}% is Incorrect.`;
-    if (userInput == correctAnswer) {
-        document.getElementById(writeLocation).innerHTML= responseForCorrect;
-        if (writeLocation = 'returnGenotypeAnswer')
-            document.getElementById('phenotype').style.display = 'inline';
-    } else 
-        document.getElementById(writeLocation).innerHTML= responseForIncorrect;
-}
-
-function checkGenotypeAnswer(userInput) {
-    completePunnettSquare();
-    correctAnswer = (childResults[childGenotype] * PROBABILITY_MULTIPLIER);
-    //Check answer and write output
-    checkAnswerValue(userInput, correctAnswer, 'returnGenotypeAnswer');
-}
 
 function calculateChildOutcomes(punnetSquare, results) {
     for (var i = 1; i < punnetSquare.length; i++) {
@@ -199,9 +148,56 @@ function calculateChildOutcomes(punnetSquare, results) {
 }
 
 
-// Randon number generator with max inclusive -------------------------------------
+function genotypeTerm(parentGenotype) {
+    var genotypeTerm;
+    var genotypeValue = parentGenotype[0] + parentGenotype[1];
+    switch (genotypeValue) {
+        case 0:
+            genotypeTerm = "homozygous recessive";
+            break;
+        case 1:
+            genotypeTerm = "heterozygous";
+            break;
+        case 2:
+            genotypeTerm = "homozygous dominant";
+            break;
+    }
+    return genotypeTerm;
+}
+
+
+function calculatePunnettSqaure(matrix) {
+    for (var i = 1; i < matrix.length; i++) {
+        for (var j = 1; j < matrix.length; j++) {
+            matrix[i][j] = matrix[i - i][j] + matrix[i][j - j];
+        }
+    }
+    return matrix;
+}
+
+
+function generateGenotype() {
+    var parent = [];
+    var genotypeValue = getRandomInt(0, 2);
+    switch (genotypeValue) {
+        case 0:
+            parent[0] = 0;
+            parent[1] = 0;
+            break;
+        case 1:
+            parent[0] = 1;
+            parent[1] = 0;
+            break;
+        case 2:
+            parent[0] = 1;
+            parent[1] = 1;
+            break;
+    }
+    return parent;
+}
+
+// Max is inclusive
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
-
 

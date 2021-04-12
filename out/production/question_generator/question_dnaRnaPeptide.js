@@ -49,8 +49,6 @@ var RNA_TO_DNA = {
     "C": "G"
 }
 
-
-// Question prompts  ----------------------------------------------------
 var rnaQuestionPrompt = "Given the following DNA template strand, what would be the sequence of " +
     " nucleotide for the transcripted mRNA.";
 var peptideQuestionPrompt = "What is the amino acide sequence of the peptide " +
@@ -58,7 +56,6 @@ var peptideQuestionPrompt = "What is the amino acide sequence of the peptide " +
     "For example: Met-Try-Leu";
 
 
-// Main function  ----------------------------------------------------
 function generateTrascriptQuestion() {
     resetPage();
     createPeptide();
@@ -71,8 +68,6 @@ function generateTrascriptQuestion() {
     document.getElementById('transcription-translation-textbox').style.visibility = 'visible';
     }
 
-
-// Creating the question elements  ----------------------------------------------------
 function createPeptide() {
     peptide = [];
     for (let i = 0; i <= lengthOfPeptide; i++) {
@@ -92,16 +87,6 @@ function createRNA() {
     }
 }
 
-function createDNA() {
-    dna = "";
-    let rna = rnaAnswer.split("");
-    rna.forEach(nucelotide => {
-        dna += RNA_TO_DNA[nucelotide];
-    });
-}
-
-
-// Formatting the correct answer elements  -------------------------------------------
 function formatPeptideAnswer() {
     peptideAnswer = "";
     peptideAnswer = startPeptide
@@ -130,12 +115,15 @@ function nucleotideWrap() {
     return wrapper;
 }
 
+function createDNA() {
+    dna = "";
+    let rna = rnaAnswer.split("");
+    rna.forEach(nucelotide => {
+        dna += RNA_TO_DNA[nucelotide];
+    });
+}
 
-//  User input declaration and validation  -------------------------------------------------
 var userInput;
-var correctAnswer = "Perfect!";
-var incorrectAnswer = "Try again!";
-
 function setUserInput(value) {
     userInput = value.trim().toUpperCase();
     if (!isRNACorrect)
@@ -144,6 +132,8 @@ function setUserInput(value) {
         checkPeptide();
 }
 
+var correctAnswer = "Perfect!";
+var incorrectAnswer = "Try again!";
 function checkRNA() {
     if (rnaAnswer == userInput) {
         isRNACorrect = true;
@@ -153,27 +143,25 @@ function checkRNA() {
         document.getElementById('rna-peptide-textbox').value = " ";
     } else
         document.getElementById('rna-response').innerHTML = incorrectAnswer;
+
 }
 
 function checkPeptide() {
     if (peptideAnswer.toUpperCase() == userInput) {
-        document.getElementById('peptide-answer').innerHTML = `${correctAnswer} ${peptideAnswer} 
-                    is correct!`;
+        document.getElementById('peptide-answer').innerHTML = correctAnswer + " " + peptideAnswer;
         document.getElementById('rna-peptide-textbox').value = " ";
     } else {
         document.getElementById('peptide-answer').innerHTML = incorrectAnswer;
     }
 }
 
-
-// Randon number generator with max exclusive -------------------------------------
+// Max is exclusive
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min);
   }
 
-  // Reset HTML elements for new questions -----------------------------------------
   function resetPage() {
     document.getElementById('rna-peptide-textbox').value = " ";
     document.getElementById("dna-template").innerHTML = " ";

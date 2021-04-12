@@ -26,6 +26,7 @@ body {
 
 
 /* Input for Stock Dilution Question */
+
 .stockDilution-textbox {
     display: grid;
     font-family: Roboto;
