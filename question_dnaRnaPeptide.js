@@ -68,7 +68,7 @@ function generateTrascriptQuestion() {
     createDNA();
     document.getElementById("rna-question").innerHTML = rnaQuestionPrompt;
     document.getElementById("dna-template").innerHTML = dna;
-    document.getElementById('transcription-translation-textbox').style.visibility = 'visible';
+    document.getElementById('container-submit-rna').style.visibility = 'visible';
     }
 
 
@@ -151,6 +151,10 @@ function checkRNA() {
         document.getElementById('peptide-question').innerHTML = peptideQuestionPrompt;
         document.getElementById('rna-transcript').innerHTML = rnaAnswer;
         document.getElementById('rna-peptide-textbox').value = " ";
+        document.getElementById('container-submit-rna').style.visibility = "hidden";
+        document.getElementById('container-submit-peptide').style.visibility = "visible";
+        
+        
     } else
         document.getElementById('rna-response').innerHTML = incorrectAnswer;
 }
@@ -159,7 +163,8 @@ function checkPeptide() {
     if (peptideAnswer.toUpperCase() == userInput) {
         document.getElementById('peptide-answer').innerHTML = `${correctAnswer} ${peptideAnswer} 
                     is correct!`;
-        document.getElementById('rna-peptide-textbox').value = " ";
+        document.getElementById('peptide-sequence').value = " ";
+        document.getElementById('container-submit-peptide').style.visibility = "hidden"
     } else {
         document.getElementById('peptide-answer').innerHTML = incorrectAnswer;
     }
@@ -177,9 +182,12 @@ function getRandomInt(min, max) {
   function resetPage() {
     document.getElementById('rna-peptide-textbox').value = " ";
     document.getElementById("dna-template").innerHTML = " ";
-    document.getElementById("transcription-translation-textbox").value = " ";
+    document.getElementById("container-submit-rna").value = " ";
     document.getElementById('rna-transcript').innerHTML = " ";
     document.getElementById('rna-response').innerHTML = " ";
     document.getElementById('peptide-question').innerHTML = " ";
+    document.getElementById('peptide-textbox').value = " ";
+    document.getElementById('container-submit-peptide').style.visibility = "hidden";
     document.getElementById('peptide-answer').innerHTML = " ";
+    isRNACorrect = false;
   }

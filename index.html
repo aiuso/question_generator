@@ -1,11 +1,10 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <script type="text/javascript" src="functions.js"></script>
         <script type="text/javascript" src="question_punnettSquare.js"></script>
         <script type="text/javascript" src="question_stockDilution.js"></script>
         <script type="text/javascript" src="question_dnaRnaPeptide.js"></script>
-        <link href="question_stylesheet.css" rel="stylesheet" />
+        <link href="css_questions.css" rel="stylesheet" />
     </head>
 
     <body>
@@ -85,27 +84,7 @@
 
         <p>----------------------------------------------------------------------------------------------------------------------</p>
         
-        <!--  Transcription & Translation Question -->
-        <section>
-            <div>
-                <button type = "button" id="button" onclick=generateTrascriptQuestion()>Click for Question </button>  
-                <p id='rna-question'></p>
-                <p id='dna-template'></p>
-                <p id='rna-transcript'></p>
-                <p id='rna-response'></p>
-                <p id='peptide-question'></p>
-                <p id='peptide-answer'></p>
-            </div>
-            <div id='transcription-translation-textbox' style='visibility:hidden'>
-                <label for="answer-textbox" class="answer-textbox">
-                    <input type="text" id="rna-peptide-textbox" placeholder=" ">
-                    <span class="label">mRNA Sqeuence</span>
-                    <span class="focus-bg"></span>
-                </label>
-                <button type ="button" class="submit" id="sd-submit" 
-                            onclick=setUserInput(document.getElementById("rna-peptide-textbox").value)>Submit
-                        </button>     
-        </section>
+
     </body>
 </html>
 
