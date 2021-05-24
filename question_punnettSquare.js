@@ -1,80 +1,98 @@
-//  Constant for Percentage Value of a Single Square of Punnett Square
-var PROBABILITY_MULTIPLIER = 25;
+//  Constants ###################
+const PROBABILITY_MULTIPLIER = 25;
+const TRAIT_EXPRESSION_DOMINANCE = ["dominant", "recessive"];
+const ZYGOSITY_LIST = ["homozygous recessive", "heterozygous", "homozygous dominant"];
 
-// Array String Reference Libraries
+
+// Multiplescope Variables #########
 var punnettSquare = [[],[],[]];
-var geneExpressionType = ["dominant", "recessive"];
-var genotypeStringArray = ["homozygous recessive", "heterozygous", "homozygous dominant"];
-var expressionType
-var childGenotype;
-var childResult;
+var traitDominance;
+var femaleAlleles;
+var maleAlleles;
+var childZygosity;
+var offspringOutcomeTally;
 var answerPunnetSquare;
+var correctGenotypeAnswer;
+var correctPhenotypeAnswer;
 
 
-// Main function --------------------------------------------------------------------------------------
+
+// Main #######################
+
 function generatePunnettQuestion() {
-    document.getElementById('returnGenotypeAnswer').innerHTML = " ";
-    document.getElementById('punnettSquareAnswer').innerHTML = " ";
-    document.getElementById('phenotype').style.display = 'none';
-    document.getElementById('returnPhenotypeAnswer').innerHTML = " ";
+    resetHTML();
+    offspringOutcomeTally = {"homozygous recessive": 0, 
+                                                    "heterozygous": 0,
+                                                    "homozygous dominant": 0};
+    // Initializing Parents and Child
+    traitDominance = TRAIT_EXPRESSION_DOMINANCE[getRandomInt(0, 1)];
+    femaleAlleles = assignAlleles();
+    maleAlleles = assignAlleles();
+    childZygosity = ZYGOSITY_LIST[getRandomInt(0, 2)];
 
-    // Initializing Punnett Square with Parent Alleles
-    expressionType = geneExpressionType[getRandomInt(0, 1)]
-    var femaleGenotypeValues = generateGenotype();
-    var maleGenotypeValues = generateGenotype();
-
-    //Inializing Punnett Square
-    punnettSquare[0][0] = "_"
-    punnettSquare[0][1] = maleGenotypeValues[0];
-    punnettSquare[0][2] = maleGenotypeValues[1];
-    punnettSquare[1][0] = femaleGenotypeValues[0];
-    punnettSquare[2][0] = femaleGenotypeValues[1];
-
-    // Generating Punnett Square Values
-    punnettSquare = calculatePunnettSqaure(punnettSquare);
-    childGenotype = genotypeStringArray[getRandomInt(0, 2)];
-
-    // Scenario and question prompts
-    var scenario = `You want to determine the possible genetic outcomes ` +
-    `for a particular ${expressionType} gene. \n` +
-    `You know that the male parent has a genotype that is ${genotypeTerm(maleGenotypeValues)} ` +
-    `and that the female parent has a genotype is ${genotypeTerm(femaleGenotypeValues)}.`;
-    var genotypeQuestion = `What is the chance that these parents have ` +
-            `a child who's genotype is ${childGenotype}.`;
-
-    // Print Question 
-    document.getElementById('scenario').innerHTML= scenario;
-    document.getElementById('genotypeQuestion').innerHTML= genotypeQuestion;
-    document.getElementById('genotypeButtons').style.display = 'inline';
+    punnettSquare = generatePunnettSquare(punnettSquare, maleAlleles, femaleAlleles);
+    offspringOutcomeTally = tallyPossibleOutcomes(punnettSquare, offspringOutcomeTally);
+    correctGenotypeAnswer = (offspringOutcomeTally[childZygosity] * PROBABILITY_MULTIPLIER);
+    createQuestion();
 }
 
 
-// Punnett Square Functions  ----------------------------------------------------
-function completePunnettSquare() {
-    childResults = {"homozygous recessive": 0, 
-        "heterozygous": 0,
-        "homozygous dominant": 0};
-    childResults = calculateChildOutcomes(punnettSquare, childResults);
-} 
+/*
+##########  Generating the Scenario  ##########
 
-function printPunnettSquare() {
-    var answerPunnetSquare = punnettSquareGenotype(punnettSquare, "B");
-    var table = "<table border=1>";
-    for (var i = 0; i < answerPunnetSquare.length; i++) {
-        table += "<tr>";
-        // length returns number of rows
-        for (var j = 0; j < answerPunnetSquare[i].length; j++) {
-            table += "<td>"+answerPunnetSquare[i][j]+"</td>";
-        }
-        table += "</tr>";
+assignAlleles() will  randomly generate an inclusive value between 0 and 2. This value will determine the zygosity
+and allele composition for each parent.
+        0 == homozygous recessive; the parent will have two allele values of 0. Both alleles are recessive.
+        1 == heterzygous; the parent will have one allele value of 1 and one allele value of 0.
+        2 == homozygous dominant; the parent will have two allele values of 1. Both alleles are dominant.
+
+generatePunnettSquare() will transfer parent allele values to the Punnett square matrix and completeOffspringMatrix()
+will use those values to calculate indexes of the matrix. These values indicate the possible zygosity outcomes for the offspring.
+        0 == homozygous recessive
+        1 == heterzygous
+        2 == homozygous dominant
+
+Example:
+_________________
+|_____|__1__|__0__|
+|__1__|__2__|__1__|
+|__0__|__1__|__0__|
+*/
+
+function assignAlleles() {
+    let alleleArray = [];
+    let value = getRandomInt(0, 2);
+    switch (value) {
+        case 0:
+            alleleArray[0] = 0;
+            alleleArray[1] = 0;
+            break;
+        case 1:
+            alleleArray[0] = 1;
+            alleleArray[1] = 0;
+            break;
+        case 2:
+            alleleArray[0] = 1;
+            alleleArray[1] = 1;
+            break;
     }
-    table += "</table>"
-    document.getElementById('punnettSquareAnswer').innerHTML= table;
+    return alleleArray;
 }
 
-function calculatePunnettSqaure(matrix) {
-    for (var i = 1; i < matrix.length; i++) {
-        for (var j = 1; j < matrix.length; j++) {
+function generatePunnettSquare(pSquare, mAlleles, fAlleles) {
+        // Set Parent Alleles
+        pSquare[0][0] = "_";
+        pSquare[0][1] = mAlleles[0];
+        pSquare[0][2] = mAlleles[1];
+        pSquare[1][0] = fAlleles[0];
+        pSquare[2][0] = fAlleles[1];
+        pSquare = completeOffspringMatrix(pSquare)
+        return pSquare
+}
+
+function completeOffspringMatrix(matrix) {
+    for (let i = 1; i < matrix.length; i++) {
+        for (let j = 1; j < matrix.length; j++) {
             matrix[i][j] = matrix[i - i][j] + matrix[i][j - j];
         }
     }
@@ -82,126 +100,144 @@ function calculatePunnettSqaure(matrix) {
 }
 
 
-// Genotype  functions ------------------------------------------------------------------------------
-function generateGenotype() {
-    var parent = [];
-    var genotypeValue = getRandomInt(0, 2);
-    switch (genotypeValue) {
-        case 0:
-            parent[0] = 0;
-            parent[1] = 0;
-            break;
-        case 1:
-            parent[0] = 1;
-            parent[1] = 0;
-            break;
-        case 2:
-            parent[0] = 1;
-            parent[1] = 1;
-            break;
-    }
-    return parent;
+/* 
+##########  Creating & Posting the Question  ##########
+
+createQuestion() will initialize the genotype question and write it to HTML.
+fetchZygosity() take values of 0, 1 or 2 and turns that into 
+
+ZYGOSITY_LIST[mal]
+*/ 
+
+function createQuestion() {
+    let scenario = `You want to determine the possible genetic outcomes ` +
+    `for a particular ${traitDominance} trait. \n` +
+    `You know that the male parent has a genotype that is ${fetchZygosity(maleAlleles)} ` +
+    `and that the female parent has a genotype is ${fetchZygosity(femaleAlleles)}.`;
+    let genotypeQuestion = `What is the chance that these parents have ` +
+            `a child who's genotype is ${childZygosity}.`;
+
+    // Post Question to HTML & Update Visibility
+    document.getElementById('scenario').textContent= scenario;
+    document.getElementById('genotypeQuestion').textContent= genotypeQuestion;
+    document.getElementById('genotypeButtons').style.display = 'block';
+    document.getElementById('showPunnetSquare').style.visibility = 'visible';
 }
 
-function genotypeTerm(parentGenotype) {
-    var genotypeTerm;
-    var genotypeValue = parentGenotype[0] + parentGenotype[1];
-    switch (genotypeValue) {
-        case 0:
-            genotypeTerm = "homozygous recessive";
-            break;
-        case 1:
-            genotypeTerm = "heterozygous";
-            break;
-        case 2:
-            genotypeTerm = "homozygous dominant";
-            break;
-    }
-    return genotypeTerm;
+function fetchZygosity(allele) {
+    let zygosity;
+    let alleleValue = allele[0] + allele[1];
+    if (alleleValue == 0)
+            zygosity = "homozygous recessive";
+    else if (alleleValue == 1)
+            zygosity = "heterozygous";
+    else if (alleleValue == 2)
+            zygosity = "homozygous dominant";
+    return zygosity;
 }
 
-function punnettSquareGenotype(punnetSquare, letter) {
+
+// Calculating Answers #######################
+
+function tallyPossibleOutcomes(matrix, runningTotal) {
+    for (let i = 1; i < matrix.length; i++) {
+        for (let j = 1; j < matrix.length; j++) {
+            if (matrix[i][j] == 0)
+                    runningTotal["homozygous recessive"] = runningTotal["homozygous recessive"] + 1;
+            else if (matrix[i][j] == 1) 
+                    runningTotal["heterozygous"] = runningTotal["heterozygous"] + 1;
+            else if (matrix[i][j] == 2) 
+                    runningTotal["homozygous dominant"] = runningTotal["homozygous dominant"] + 1;
+            }
+        }
+    return runningTotal;
+    }
+
+
+
+// Validate Input & Check for Correctness ######################################
+
+function checkGenotypeAnswer(userInput) {
+    checkAnswer(userInput, correctGenotypeAnswer, 'returnGenotypeAnswer');
+}
+
+function checkPhenotypeAnswer(userInput){
+    if (traitDominance == "recessive")
+        correctPhenotypeAnswer = offspringOutcomeTally['homozygous recessive'] * PROBABILITY_MULTIPLIER;
+    else if (traitDominance == "dominant")
+        correctPhenotypeAnswer = (offspringOutcomeTally['homozygous dominant'] + offspringOutcomeTally['heterozygous']) * PROBABILITY_MULTIPLIER;
+    checkAnswer(userInput, correctPhenotypeAnswer, 'returnPhenotypeAnswer');
+}
+
+function checkAnswer(userInput, correctAnswer, writeLocation) {
+    let correctResponse = `Perfect - ${userInput}% is Correct!`;
+    let incorrectResponse = `Not quite - ${userInput}% is Incorrect.`;
+
+    if (userInput == correctAnswer) {
+        document.getElementById(writeLocation).textContent = correctResponse;
+        if (writeLocation == 'returnGenotypeAnswer')
+            document.getElementById('phenotype').style.visibility = 'visible';
+    } else {
+        document.getElementById(writeLocation).textContent= incorrectResponse;
+        if (writeLocation == 'returnGenotypeAnswer')
+            document.getElementById('phenotype').style.visibility = 'hidden';
+    }
+}
+
+
+// Punnett Square Table for HTML ########################
+
+function printPunnettSquare() {
+    let psWithLetters = punnettWithLetters(punnettSquare, "B");
+    let table = "<table border=1>";
+    for (let i = 0; i < psWithLetters.length; i++) {
+        table += "<tr>";
+        // length returns number of rows
+        for (let j = 0; j < psWithLetters[i].length; j++) {
+            table += "<td>"+psWithLetters[i][j]+"</td>";
+        }
+        table += "</tr>";
+    }
+    table += "</table>"
+    document.getElementById('punnettSquareAnswer').innerHTML= table;
+}
+
+function punnettWithLetters(punnetSquare, letter) {
     var punnettAnswerKey = [[],[],[]];
     punnettAnswerKey[0][0] = "_";
-    for (var i = 0, j = 1; j < punnetSquare.length; j++) {
+    for (let i = 0, j = 1; j < punnetSquare.length; j++) {
             if (punnetSquare[i][j] == 0) 
                     punnettAnswerKey[i][j] = letter.toLowerCase();
             else if (punnetSquare[i][j] == 1) 
                     punnettAnswerKey[i][j] = letter.toUpperCase();
     }
-    for (var i = 1, j = 0; i < punnetSquare.length; i++) {
+    for (let i = 1, j = 0; i < punnetSquare.length; i++) {
         if (punnetSquare[i][j] == 0)
             punnettAnswerKey[i][j] = letter.toLowerCase();
         else if (punnetSquare[i][j] == 1)
                 punnettAnswerKey[i][j] = letter.toUpperCase();
     }
-    for (var n = 1; n < punnetSquare.length; n++) {
+    for (let n = 1; n < punnetSquare.length; n++) {
         for (var m = 1; m < punnetSquare.length; m++)
-            switch (punnetSquare[n][m]) {
-                case 0:
+            if (punnetSquare[n][m] == 0) 
                     punnettAnswerKey[n][m] = letter.toLowerCase() + letter.toLowerCase();
-                    break;
-                case 1:
+            else if (punnetSquare[n][m] == 1) 
                     punnettAnswerKey[n][m] = letter.toUpperCase() + letter.toLowerCase();
-                    break;
-                case 2:
+            else if (punnetSquare[n][m] == 2) 
                     punnettAnswerKey[n][m] = letter.toUpperCase() + letter.toUpperCase();
-                    break;
             }
-    }
     return punnettAnswerKey;
-}
-
-// User input and validation  ------------------------------------------------------------------------
-function checkPhenotypeAnswer(userInput){
-    if (expressionType == "recessive")
-        correctAnswer = childResults['homozygous recessive'] * PROBABILITY_MULTIPLIER;
-    else
-        correctAnswer = (childResults['homozygous dominant'] + childResults['heterozygous']) * PROBABILITY_MULTIPLIER;
-    checkAnswerValue(userInput, correctAnswer, 'returnPhenotypeAnswer');
-}
-
-function checkAnswerValue(userInput, correctAnswer, writeLocation) {
-    var responseForCorrect = `Perfect - ${userInput}% is Correct!`;
-    var responseForIncorrect = `Not quite - ${userInput}% is Incorrect.`;
-    if (userInput == correctAnswer) {
-        document.getElementById(writeLocation).innerHTML= responseForCorrect;
-        if (writeLocation = 'returnGenotypeAnswer')
-            document.getElementById('phenotype').style.display = 'inline';
-    } else 
-        document.getElementById(writeLocation).innerHTML= responseForIncorrect;
-}
-
-function checkGenotypeAnswer(userInput) {
-    completePunnettSquare();
-    correctAnswer = (childResults[childGenotype] * PROBABILITY_MULTIPLIER);
-    //Check answer and write output
-    checkAnswerValue(userInput, correctAnswer, 'returnGenotypeAnswer');
-}
-
-function calculateChildOutcomes(punnetSquare, results) {
-    for (var i = 1; i < punnetSquare.length; i++) {
-        for (var j = 1; j < punnetSquare.length; j++) {
-            switch (punnetSquare[i][j]) {
-                case 0:
-                    results["homozygous recessive"] = results["homozygous recessive"] + 1;
-                    break;
-                case 1:
-                    results["heterozygous"] = results["heterozygous"] + 1;
-                    break;
-                case 2:
-                    results["homozygous dominant"] = results["homozygous dominant"] + 1;
-                    break;
-            }
-        }
     }
-    return results;
-}
 
 
-// Randon number generator with max inclusive -------------------------------------
+// Max is inclusive
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-
+function resetHTML() {
+    document.getElementById('returnGenotypeAnswer').textContent = " ";
+    document.getElementById('punnettSquareAnswer').textContent = " ";
+    document.getElementById('phenotype').style.visibility = 'hidden';
+    document.getElementById('returnPhenotypeAnswer').textContent = " ";
+}

@@ -1,15 +1,19 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <script type="text/javascript" src="question_punnettSquare.js"></script>
-        <script type="text/javascript" src="question_stockDilution.js"></script>
-        <script type="text/javascript" src="question_dnaRnaPeptide.js"></script>
-        <link href="css_questions.css" rel="stylesheet" />
-    </head>
+<head>
+    <script type="text/javascript" src="question_punnettSquare.js"></script>
+    <link href="css_questions.css" rel="stylesheet" />
+</head>
 
-    <body>
-        <!--  Punnet Sqaure Question -->
-        <section id=question>
+<body>
+    <!-- Punnett Sqaure Testing -->
+    <section id="punnett" class="three">
+        <div class="container">
+
+            <header>
+                <h2>Punnett Square</h2>
+            </header>
+
             <div id=question>
                 <div class="grid-container">
 
@@ -83,35 +87,7 @@
 
                 </div>
             </div>
-        </section>
-
-        <p>----------------------------------------------------------------------------------------------------------------------</p>
-
-        <!--  Stock Dilution Question -->
-        <section>
-            <div id='stock-dilution'>
-                <button type="button" id="button" onclick=generateStockDilutionQuestion()>Click for Question </button>
-                <p id='stockDilution-question'></p>
-                <p id="stockDilution-answer"></p>
-                <p id='mixture-question'></p>
-                <p id='mixture-answer'></p>
-                <div id='stockDilution-textbox' style='visibility:hidden'>
-                    <label for="answer-textbox" class="answer-textbox">
-                        <input type="text" id="sd-input-box" placeholder="&nbsp;">
-                        <span class="label">Answer</span>
-                        <span class="focus-bg"></span>
-                    </label>
-                    <button type="button" class="submit" id="sd-submit"
-                            onclick=setUserInput(document.getElementById("sd-input-box").value)>
-                        Submit
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <p>----------------------------------------------------------------------------------------------------------------------</p>
-
-
+        </div>
+    </section>
     </body>
 </html>
-
