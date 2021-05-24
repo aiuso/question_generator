@@ -38,6 +38,7 @@ function generatePunnettQuestion() {
 
 
 /*
+
 ##########  Generating the Scenario  ##########
 
 assignAlleles() will  randomly generate an inclusive value between 0 and 2. This value will determine the zygosity
@@ -57,6 +58,7 @@ _________________
 |_____|__1__|__0__|
 |__1__|__2__|__1__|
 |__0__|__1__|__0__|
+
 */
 
 function assignAlleles() {
@@ -104,9 +106,7 @@ function completeOffspringMatrix(matrix) {
 ##########  Creating & Posting the Question  ##########
 
 createQuestion() will initialize the genotype question and write it to HTML.
-fetchZygosity() take values of 0, 1 or 2 and turns that into 
-
-ZYGOSITY_LIST[mal]
+fetchZygosity() take values for parent alles and returns a string indiciating zygoisity.
 */ 
 
 function createQuestion() {
@@ -137,7 +137,13 @@ function fetchZygosity(allele) {
 }
 
 
-// Calculating Answers #######################
+/*
+##########  Calculating Answers  ##########
+
+tallyPossibleOutcomes() accepts a Punnett sqaure matrix and tallys the
+the genotypes of each of the four possible outcomes into three types of
+zygosity.
+*/ 
 
 function tallyPossibleOutcomes(matrix, runningTotal) {
     for (let i = 1; i < matrix.length; i++) {
@@ -155,7 +161,18 @@ function tallyPossibleOutcomes(matrix, runningTotal) {
 
 
 
-// Validate Input & Check for Correctness ######################################
+/* 
+##########  Validate Input & Check for Correctness  ##########
+
+Both checkGenotypeAnswer() and checkPhenotypeAnswer() will accept user input.
+An HTML button will call these functions onclick and pass their button values. 
+Phenotypes depend on the dominance of the trait and
+will acess that information first.
+
+Both functions will use checkAnswer() for the comparions of these values
+with expected values. Results will be written to the location indicated by the
+parameter passed to the function.
+*/
 
 function checkGenotypeAnswer(userInput) {
     checkAnswer(userInput, correctGenotypeAnswer, 'returnGenotypeAnswer');
@@ -185,7 +202,12 @@ function checkAnswer(userInput, correctAnswer, writeLocation) {
 }
 
 
-// Punnett Square Table for HTML ########################
+/* 
+##########  Punnett Square Table for HTML  ##########
+
+punnettWithLetters() will take values and replace them with the proper letter notation.
+printPunnettSquare will arrange the aforementioned into an HTML table.
+*/
 
 function printPunnettSquare() {
     let psWithLetters = punnettWithLetters(punnettSquare, "B");
@@ -230,8 +252,10 @@ function punnettWithLetters(punnetSquare, letter) {
     }
 
 
-// Max is inclusive
+// General Functions ##########
+
 function getRandomInt(min, max) {
+    // Max inclusive
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
