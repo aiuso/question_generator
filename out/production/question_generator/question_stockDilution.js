@@ -10,7 +10,6 @@ var answer;
 var count;
 var waterQuestion; 
 
-// Main function  ----------------------------------------------------
 function generateStockDilutionQuestion() {
     resetPage();
     // Constants for Random Value Ranges
@@ -25,6 +24,8 @@ function generateStockDilutionQuestion() {
 
     //Randomly choose question type
     questionType = getRandomInt(1, 3);
+
+    //Question types
     switch (questionType) {
         // Solve for vOne
         case 1:
@@ -76,8 +77,6 @@ function generateStockDilutionQuestion() {
     }
 }
 
-
-// Question for mixing v1 with water ---------------------------------------------------------
 function mixtureQuestion() {
     questionWater = `\nNow, how much water will we need to mix with ${answer}mL of ${cOne}x TAE?` +
     `\nRound your answer to the nearest integer.`;
@@ -87,7 +86,6 @@ function mixtureQuestion() {
 }
 
 
-// User input declaration and validation  -------------------------------------------------------
 function setUserInput(value) {
     document.getElementById('sd-input-box').value = " ";
     if (typeof question === 'undefined')
@@ -95,6 +93,7 @@ function setUserInput(value) {
     else 
             validateInput(parseInt(value), answer, questionType);
 }
+
 
 function validateInput(value, answer, questionType) {
     if (value === parseInt(value, 10))
@@ -124,19 +123,18 @@ function checkAnswer(userAttempt, answer, questionType) {
     }
 }
 
-
-// Randon number generator with max inclusive -------------------------------------
+// Max is inclusive
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
 
-// HTML page edits ----------------------------- -------------------------------------
 function printToPage(thingToPrint, whereToPrint) {
     document.getElementById(whereToPrint).innerHTML= thingToPrint;
 }
 
 function resetPage() {
+        //Reset content on webpage
         waterQuestion = false;
         document.getElementById('stockDilution-textbox').style.visibility = 'visible';
         document.getElementById('stockDilution-answer').innerHTML = " ";

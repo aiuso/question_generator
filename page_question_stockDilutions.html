@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <script type="text/javascript" src="question_stockDilution.js"></script>
+        <link href="css_questions.css" rel="stylesheet" />
+    </head>
+
+<!--  Stock Dilution Question -->
+<section>
+    <div id='stock-dilution'>
+        <p>
+            <button type = "button" id="button" onclick=generateStockDilutionQuestion()>Click for Question </button>
+        </p>
+        <p id='stockDilution-question'></p>
+        <p id="stockDilution-answer"></p>
+        <p id='mixture-question'></p>
+        <p id='mixture-answer'></p>
+            <div class="stockDilution-textbox" id='stockDilution-textbox' style='visibility:hidden'>
+                <label for="sd-input-box" class="answer-textbox">
+                    <input type="text" id="sd-input-box" placeholder="&nbsp;">
+                    <span class="label">Answer</span>
+                    <span class="focus-bg"></span>
+                </label>
+                <button type ="button" class="submit" id="sd-submit" 
+                            onclick=setUserInput(document.getElementById("sd-input-box").value)>Submit
+                        </button>
+            </div>
+    </div>
+</section>

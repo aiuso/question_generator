@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<!--  Transcription & Translation Question -->
+
+    <head>
+        <script type="text/javascript" src="question_dnaRnaPeptide.js"></script>
+        <link href="css_questions.css" rel="stylesheet" />
+    </head>
+
+    <body>
+        <div>
+            <div>
+                <button type = "button" id="button" onclick=generateTrascriptQuestion()>Click for Question </button>  
+
+                <p id='prompt-rna-question'></p>
+                <p id='prompt-dna-template'></p>
+                <p id='post-rna-transcript'></p>
+                <p id='post-highlight-rna-answer'></p>
+                <p id='post-rna-response'></p>
+                <p id='prompt-peptide-question'></p>
+                <p id='post-peptide-answer'></p>
+
+                <div class="container-submit" id='container-submit-rna' style='visibility:hidden'>
+                    <label for="rna-peptide-textbox" class="answer-textbox" id="rna-textbox">
+                        <input type="text" id="rna-peptide-textbox" placeholder="&nbsp;" >
+                        <span class="label">mRNA Sequence</span>
+                        <span class="focus-bg"></span>
+                    </label>
+                    <button type ="button" class="submit" id="sd-submit" 
+                         onclick=setUserInput(document.getElementById("rna-peptide-textbox").value)>Submit
+                        </button>
+                </div>
+
+            <div class="container-submit" id='container-submit-peptide' style='visibility:hidden;'>
+                <label for="peptide-sequence" class="answer-textbox" id="peptide-textbox">
+                    <input type="text" id="peptide-sequence" placeholder="&nbsp;">
+                    <span class="label">Peptide Sequence</span>
+                    <span class="focus-bg"></span>
+                </label>
+                <button type ="button" class="submit" id="sd-submit" 
+                        onclick=setUserInput(document.getElementById("peptide-sequence").value)>Submit
+                    </button>     
+            </div>
+        </div>
+    </body>
+</html>
