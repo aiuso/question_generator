@@ -172,25 +172,36 @@ function setUserInput(value) {
 function checkRNA() {
     if (rnaAnswer == userInput) {
         isRNACorrect = true;
-        document.getElementById('post-rna-response').innerHTML = CORRECT_ANSWER;
-        document.getElementById('post-rna-transcript').innerHTML = rnaAnswer;
+        document.getElementById('post-rna-response').innerHTML = `${CORRECT_ANSWER} <br /> <p class="answer">${rnaAnswer}<p>`;
         //document.getElementById('post-highlight-rna-answer').innerHTML = rnaAltHighlight ;
         document.getElementById('prompt-peptide-question').innerHTML = PEPTIDE_QUESTION;
-        document.getElementById('rna-sequence').value = " ";
         document.getElementById('container-submit-rna').style.display = "none";
         document.getElementById('container-submit-peptide').style.visibility = "visible";
-    } else
-        document.getElementById('post-rna-response').innerHTML = INCORRECT_ANSWER;
+    } else {
+        let regex_nucleotides = /[^acgu]/gi.test(userInput)
+        if (regex_nucleotides == true)
+            document.getElementById('post-rna-response').innerHTML = `${INCORRECT_ANSWER} You may have submitted characters
+                that don't represent RNA nucleotides.`;
+        else
+            document.getElementById('post-rna-response').innerHTML = `${userInput} is incorrect. ${INCORRECT_ANSWER}`;
+    }
+    document.getElementById('rna-textbox').value = " ";
 }
 
 function checkPeptide() {
     if (peptideAnswer.toUpperCase() == userInput) {
-        document.getElementById('post-peptide-answer').innerHTML = `${CORRECT_ANSWER} <br> ${peptideAnswer} `;
+        document.getElementById('post-peptide-answer').innerHTML = `${CORRECT_ANSWER} <br /> <p class="answer"> ${peptideAnswer}</p> `;
         document.getElementById('peptide-textarea').value = " ";
         document.getElementById('container-submit-peptide').style.visibility = "hidden"
     } else {
-        document.getElementById('post-peptide-answer').innerHTML = INCORRECT_ANSWER;
+        let regex_peptide = /[^a-z-]/gi.test(userInput)
+        if(regex_peptide == true)
+            document.getElementById('post-peptide-answer').innerHTML = `${INCORRECT_ANSWER} You may have submitted characters
+            that aren't represented in peptides.`;
+        else 
+            document.getElementById('post-peptide-answer').innerHTML = INCORRECT_ANSWER;
     }
+    document.getElementById('peptide-textarea').value = " ";
 }
 
 
@@ -206,8 +217,7 @@ function getRandomInt(min, max) {
   function resetPage() {
     isRNACorrect = false;
     rnaAltHighlight = ""
-
-    document.getElementById('rna-sequence').value = " ";
+    document.getElementById('rna-textbox').value = " ";
     document.getElementById("prompt-dna-template").innerHTML = " ";
     document.getElementById("container-submit-rna").value = " ";
     document.getElementById('post-rna-transcript').innerHTML = " ";

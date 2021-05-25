@@ -8,46 +8,61 @@
 
     <body>
         <!-- Protein Synthesis Questions -->
-        <div>
-            <div>
-                <div >
-                    <button type = "button" id="button" onclick=generateTrascriptQuestion()>Click for Question </button>  
+        <section id="demo" class="four">
+            <div class="container">
 
-                    <p id='prompt-rna-question'></p>
-                    <p id='prompt-dna-template'></p><br>
-                    <p id='post-rna-response'></p>
-                    <p id='post-rna-transcript'></p>
-                    <p id='post-highlight-rna-answer'></p>
+                <header>
+                    <h2>Demonstration</h2>
+                </header>
 
+                <div>
+                    <div>
+                        <div>
+                            <button type="button" id="newQuestion" onclick=generateTrascriptQuestion()>Click for Question</button>
 
+                            <div>
+                                <br />
+                                <p id='prompt-rna-question'>
+                                <p id='prompt-dna-template'></p><br>
+                                <p id='post-rna-response'></p>
+                                <p class="answer" id='post-rna-transcript'></p>
+                                <p id='post-highlight-rna-answer'></p>
+                            </div>
 
-                    <div class="container-submit" id='container-submit-rna' style='display:none'>
-                        <div class="group">
-                            <input type="text" id="rna-sequence" required="required"/><span class="highlight"></span><span class="bar"></span>
-                            <label for="rna-sequence">mRNA Sequence</label>
-                            <button type ="button" class="submit" id="sd-submit" 
-                            onclick=setUserInput(document.getElementById("rna-sequence").value)>Submit</button>
+                            <div class="container-submit" id='container-submit-rna' style='display:none'>
+                                <div class="group">
+                                    <input type="text" id="rna-textbox" required="required" /><span class="highlight"></span><span class="bar"></span>
+                                    <label for="rna-textbox">mRNA Sequence</label><br />
+                                    <button type="button" class="submit" id="sd-submit"
+                                            onclick=setUserInput(document.getElementById("rna-textbox").value)>
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+
                         </div>
-                    </div>
 
+                        <div id="promt-peptide">
 
-                </div>
+                            <br />
+                            <p id='prompt-peptide-question'></p><br>
+                            <p id='post-peptide-answer'></p>
 
-                <div id="promt-peptide">
-                    <br>
-                    <p id='prompt-peptide-question'></p><br>
-                    <p id='post-peptide-answer'></p>
+                            <div class="container-submit" id='container-submit-peptide' style='visibility:hidden;'>
+                                <div class="group">
+                                    <textarea type="textarea" rows="5" id="peptide-textarea" required="required"></textarea><span class="highlight"></span><span class="bar"></span>
+                                    <label for="peptide-textarea">Amino Acid Sequence</label><br />
+                                    <button type="button" class="submit" id="sd-submit"
+                                            onclick=setUserInput(document.getElementById("peptide-textarea").value)>
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
 
-                    <div class="container-submit" id='container-submit-peptide' style='visibility:hidden;'>
-                        <div class="group">
-                            <textarea type="textarea" rows="5" id="peptide-textarea" required="required"></textarea><span class="highlight"></span><span class="bar"></span>
-                            <label for="peptide-textarea">Message</label>
-                            <button type ="button" class="submit" id="sd-submit" 
-                            onclick=setUserInput(document.getElementById("peptide-textarea").value)>Submit</button>     
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </body>
 </html>
