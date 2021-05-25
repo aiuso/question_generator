@@ -1,25 +1,12 @@
-var CODON_LENGTH = 3;
-var dnaSequence;
-var dnaSequenceLength;
-var lengthOfPeptide = getRandomInt(4, 9);
-
-var dna = "";
-var rna = [];
-var rnaAnswer;
-var isRNACorrect = false;
-var peptide = [];
-var peptideAnswer;
-
-var dnaNucleotides = ["A", "T", "C", "G"];
-var rnaNucleotides = ["A", "U", "C", "G"];
-
-var startPeptide = "Met"
-var startCodon = "AUG"
-var stopCodonList = ["UAA", "UAG", "UGA"]
-
-var length;
-var peptideArray = ["Ala", "Arg", "Asn", "Asp", "Cys", "Gln", "Glu", "Gly", "His", "Ile", "Leu", "Lys", "Met", "Phe", "Pro", "Ser", "Thr", "Trp", "Tyr", "Val"];
-var codonDictionary = {
+// Constants  ###################
+const CODON_LENGTH = 3;
+const DNA_NUCLEOTIDES = ["A", "T", "C", "G"];
+const RNA_NUCLEOTIDES = ["A", "U", "C", "G"];
+const START_PEPTIDE = "Met"
+const START_CODON = "AUG"
+const STOP_CODON_LIST = ["UAA", "UAG", "UGA"]
+const PEPTIDE_ARRAY = ["Ala", "Arg", "Asn", "Asp", "Cys", "Gln", "Glu", "Gly", "His", "Ile", "Leu", "Lys", "Met", "Phe", "Pro", "Ser", "Thr", "Trp", "Tyr", "Val"];
+const CODON_DICTIONARY = {
     "Ala": ["GCU", "GCC", "GCA", "GCG"],
     "Arg": ["CGU", "CGC", "CGA", "CGG", "AGA", "AGG"],
     "Asn": ["AAU", "AAC"],
@@ -42,23 +29,40 @@ var codonDictionary = {
     "Val": ["GUU", "GUC", "GUA", "GUG"]
 }
 
-var RNA_TO_DNA = {
+const RNA_TO_DNA = {
     "A": "T",
     "U": "A",
     "G": "C",
     "C": "G"
 }
 
+// Multiscope Variables  #########
 
-// Question prompts  ----------------------------------------------------
-var rnaQuestionPrompt = "Given the following DNA template strand, what would be the sequence of " +
+var dnaSequence;
+var dnaSequenceLength;
+var lengthOfPeptide = getRandomInt(4, 9);
+var dna = "";
+var rna = [];
+var rnaAnswer;
+var isRNACorrect = false;
+var peptide = [];
+var peptideAnswer;
+var length;
+
+
+// Question prompts  ###########
+
+const RNA_QUESTION = "Given the following DNA template strand, what would be the sequence of " +
     " nucleotides for the transcribed mRNA.";
-var peptideQuestionPrompt = "What is the amino acid sequence of the peptide " +
-    "that would be made from this mRNA? For each amino acid, input your answer using the three letter code followed by '-'. " +
-    "For example: Met-Try-Leu. Note: stop codons do not have an associated amino acid.";
+const PEPTIDE_QUESTION = "What is the amino acid sequence of the peptide " +
+    "that would be made from this mRNA? Remember, all peptide sequences start at a " + 
+    "start codon, and stop codons do not have an associated amino acid. " + 
+    "For each amino acid, input your answer using the three letter code followed by '-'. <br/>" +
+    "Example: Met-Try-Leu ";
 
 
-// Main function  ----------------------------------------------------
+// Main function  ##############
+
 function generateTrascriptQuestion() {
     resetPage();
     createPeptide();
@@ -66,18 +70,19 @@ function generateTrascriptQuestion() {
     formatPeptideAnswer();
     formatRNAAnswer();
     createDNA();
-    document.getElementById("prompt-rna-question").innerHTML = rnaQuestionPrompt;
+    document.getElementById("prompt-rna-question").innerHTML = RNA_QUESTION;
     document.getElementById("prompt-dna-template").innerHTML = dna;
-    document.getElementById('container-submit-rna').style.visibility = 'visible';
+    document.getElementById('container-submit-rna').style.display = 'inline-block';
     }
 
 
-// Creating the question elements  ----------------------------------------------------
+// Generating Question Elements #####
+
 function createPeptide() {
     peptide = [];
     for (let i = 0; i <= lengthOfPeptide; i++) {
-        let random  = getRandomInt(0, peptideArray.length);
-        let randomPeptide = peptideArray[random];
+        let random  = getRandomInt(0, PEPTIDE_ARRAY.length);
+        let randomPeptide = PEPTIDE_ARRAY[random];
         peptide.push(randomPeptide);
     }
 }
@@ -86,9 +91,9 @@ function createRNA() {
     rna = [];
     for (let i = 0; i < peptide.length; i++) {
         let aminoAcid = peptide[i];
-        let max = codonDictionary[aminoAcid].length;
+        let max = CODON_DICTIONARY[aminoAcid].length;
         let randomCodon  = getRandomInt(0, max);
-        rna.push(codonDictionary[aminoAcid][randomCodon]);
+        rna.push(CODON_DICTIONARY[aminoAcid][randomCodon]);
     }
 }
 
@@ -101,10 +106,11 @@ function createDNA() {
 }
 
 
-// Formatting the correct answer elements  -------------------------------------------
+// Formatting correct answer strings ##########
+
 function formatPeptideAnswer() {
     peptideAnswer = "";
-    peptideAnswer = startPeptide
+    peptideAnswer = START_PEPTIDE
     for (let i = 0; i < peptide.length; i++) {
         peptideAnswer += "-" + peptide[i] ;
     }
@@ -118,7 +124,7 @@ function formatRNAAnswer() {
     let startWrapper = nucleotideWrap();
     let endWrapper = nucleotideWrap();
     rnaAnswer = "";
-    rnaAnswer = startWrapper + startCodon;
+    rnaAnswer = startWrapper + START_CODON;
     rnaAltHighlight += rnaAnswer
     for (let i = 0; i < peptide.length; i++) {
         rnaAnswer += rna[i];
@@ -127,9 +133,11 @@ function formatRNAAnswer() {
         else
             rnaAltHighlight+= rna[i]
     }
-    let random = getRandomInt(0, stopCodonList.length);
-    let randomStopCodon = stopCodonList[random];
+
+    let random = getRandomInt(0, STOP_CODON_LIST.length);
+    let randomStopCodon = STOP_CODON_LIST[random];
     rnaAnswer += randomStopCodon + endWrapper; 
+    
     if (rna.length % 2 == 0)
         rnaAltHighlight += markTagOpen + randomStopCodon + markTagClose + endWrapper
     else
@@ -140,17 +148,18 @@ function nucleotideWrap() {
     let wrapper = "";
     let numberOfRandomNucleotides = getRandomInt(0, 7);
         for (let i = 0; i < numberOfRandomNucleotides; i++) {
-            let randomNucleotide = getRandomInt(0, (rnaNucleotides.length-1)); //Dont want to risk random AUG
-            wrapper += rnaNucleotides[randomNucleotide];
+            let randomNucleotide = getRandomInt(0, (RNA_NUCLEOTIDES.length-1)); //Dont want to risk random AUG; will only choose A,U, or C
+            wrapper += RNA_NUCLEOTIDES[randomNucleotide];
         }
     return wrapper;
 }
 
 
-//  User input declaration and validation  -------------------------------------------------
+//  Checking User Input ####################
+
+const CORRECT_ANSWER = "Perfect! The correct answer is: <br>";
+const INCORRECT_ANSWER = "Try again!";
 var userInput;
-var correctAnswer = "Perfect!";
-var incorrectAnswer = "Try again!";
 
 function setUserInput(value) {
     userInput = value.trim().toUpperCase();
@@ -163,51 +172,49 @@ function setUserInput(value) {
 function checkRNA() {
     if (rnaAnswer == userInput) {
         isRNACorrect = true;
-        document.getElementById('post-rna-response').innerHTML = correctAnswer;
+        document.getElementById('post-rna-response').innerHTML = CORRECT_ANSWER;
         document.getElementById('post-rna-transcript').innerHTML = rnaAnswer;
-        document.getElementById('post-highlight-rna-answer').innerHTML = rnaAltHighlight;
-        document.getElementById('prompt-peptide-question').innerHTML = peptideQuestionPrompt;
-        document.getElementById('rna-peptide-textbox').value = " ";
-        document.getElementById('container-submit-rna').style.visibility = "hidden";
+        //document.getElementById('post-highlight-rna-answer').innerHTML = rnaAltHighlight ;
+        document.getElementById('prompt-peptide-question').innerHTML = PEPTIDE_QUESTION;
+        document.getElementById('rna-sequence').value = " ";
+        document.getElementById('container-submit-rna').style.display = "none";
         document.getElementById('container-submit-peptide').style.visibility = "visible";
-        
-        
     } else
-        document.getElementById('post-rna-response').innerHTML = incorrectAnswer;
+        document.getElementById('post-rna-response').innerHTML = INCORRECT_ANSWER;
 }
 
 function checkPeptide() {
     if (peptideAnswer.toUpperCase() == userInput) {
-        document.getElementById('post-peptide-answer').innerHTML = `${correctAnswer} ${peptideAnswer} 
-                    is correct!`;
-        document.getElementById('peptide-sequence').value = " ";
+        document.getElementById('post-peptide-answer').innerHTML = `${CORRECT_ANSWER} <br> ${peptideAnswer} `;
+        document.getElementById('peptide-textarea').value = " ";
         document.getElementById('container-submit-peptide').style.visibility = "hidden"
     } else {
-        document.getElementById('post-peptide-answer').innerHTML = incorrectAnswer;
+        document.getElementById('post-peptide-answer').innerHTML = INCORRECT_ANSWER;
     }
 }
 
 
-// Randon number generator with max exclusive -------------------------------------
+// General Functions ##################
+
+//Max exclusive 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min);
   }
 
-  // Reset HTML elements for new questions -----------------------------------------
   function resetPage() {
     isRNACorrect = false;
     rnaAltHighlight = ""
 
-    document.getElementById('rna-peptide-textbox').value = " ";
+    document.getElementById('rna-sequence').value = " ";
     document.getElementById("prompt-dna-template").innerHTML = " ";
     document.getElementById("container-submit-rna").value = " ";
     document.getElementById('post-rna-transcript').innerHTML = " ";
     document.getElementById('post-rna-response').innerHTML = " ";
     document.getElementById('post-highlight-rna-answer').innerHTML = " ";
     document.getElementById('prompt-peptide-question').innerHTML = " ";
-    document.getElementById('peptide-textbox').value = " ";
+    document.getElementById('peptide-textarea').value = " ";
     document.getElementById('container-submit-peptide').style.visibility = "hidden";
     document.getElementById('post-peptide-answer').innerHTML = " ";
   }
